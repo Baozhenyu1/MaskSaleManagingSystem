@@ -91,7 +91,7 @@ module.exports = {
       port: 8020,
       proxy: {
         'api/mask/': {
-          target:  'http://111.229.63.2:8077',
+          target:  'http://111.229.63.2',
           changeOrigin: true,
           "pathRewrite":{
             "^/api": ""
