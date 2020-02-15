@@ -90,8 +90,8 @@ module.exports = {
       // development server port 8000
       port: 8020,
       proxy: {
-        'api/ShortageDrugMonitoring': {
-          target:  'http://111.231.88.241',
+        'api/mask/': {
+          target:  'http://111.229.63.2:8077',
           changeOrigin: true,
           "pathRewrite":{
             "^/api": ""

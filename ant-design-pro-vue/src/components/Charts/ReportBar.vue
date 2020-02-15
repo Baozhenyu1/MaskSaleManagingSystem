@@ -30,7 +30,7 @@
       this.draw()
       this.intnum = setInterval(_ => {
         this.updateChart()
-      }, 60000)
+      }, 60 * 1000 * 10)
     },
     Stop() {
       clearInterval(this.intnum)

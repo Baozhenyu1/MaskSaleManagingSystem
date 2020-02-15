@@ -7,7 +7,7 @@ let tmpMsg = []
 // 初始化weosocket
 function initWebSocket() {
   // ws地址 -->这里是你的请求路径
-  let ws = 'ws://111.231.88.241:4567/w_message'
+  let ws = 'ws://111.229.63.2:4567/w_message'
 
   if (user.state.token) {
     websock = new WebSocket(ws)

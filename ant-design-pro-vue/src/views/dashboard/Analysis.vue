@@ -246,7 +246,7 @@
         pagination: {pageSize: 20, hideOnSinglePage: true},
         footer: '',
         columns: [],
-        path: "ws://111.231.88.241:8000/ws",
+        path: "ws://111.229.63.2:8000/ws",
         socket: null,
         intnum: undefined,
         loss: 0,
@@ -304,7 +304,7 @@
         this.updateAnalysisList()
         this.intnum = setInterval(_ => {
           this.updateAnalysisList()
-        }, 10000)
+        }, 60 * 1000)
       },
       updateAnalysisList() {
         this.dataTmp = []
@@ -317,6 +317,7 @@
           data = data["data"]
           for (let i = 0; i < 16; i++) {
             obj.dataTmp.push({
+              key: i,
               area: data[i]["district"],
               pharmacy: data[i]["store_num"],
               reported: data[i]["post_num"] + ' (' + String((data[i]["post_percent"] * 100).toFixed(1)) + '%)',
@@ -341,6 +342,7 @@
           //console.log("Total updated", data);
           data = data["data"]
           obj.dataTotalTmp.push({
+            key: 1,
             area: data[0]["district"],
             pharmacy: data[0]["store_num"],
             reported: data[0]["post_num"] + ' (' + String((data[0]["post_percent"] * 100).toFixed(1)) + '%)',

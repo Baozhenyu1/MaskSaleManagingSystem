@@ -1,7 +1,7 @@
 const api = {
-  Login: '/ShortageDrugMonitoring/api-backend/api-token-auth/',
-  Logout: '/ShortageDrugMonitoring/api-backend/api-token-fresh/',
-  Register: '/ShortageDrugMonitoring/api-backend/api-registration/',
+  Login: '/mask/api-backend/api-token-auth/',
+  Logout: '/mask/api-backend/api-token-fresh/',
+  Register: '/mask/api-backend/api-registration/',
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
