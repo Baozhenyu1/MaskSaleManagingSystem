@@ -123,14 +123,14 @@
 
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '12px' }">
-        <a-card :bordered="false" title="各市辖区销售预约比" :style="{ height: '800px'}">
+        <a-card :bordered="false" title="各市辖区销售预约比" :style="{ height: '650px'}">
           <div>
             <SaleReservationMap/>
           </div>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '12px' }">
-        <a-card :bordered="false" title="各市辖区销售比例" :style="{ height: '800px'}">
+        <a-card :bordered="false" title="各市辖区销售比例" :style="{ height: '650px'}">
           <div style="margin-top: 0px">
             <SaleMap :district="highlight"/>
           </div>

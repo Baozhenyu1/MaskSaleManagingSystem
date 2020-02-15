@@ -1,5 +1,5 @@
 <template>
-  <div id="saleReservation" :style="{height: '800px'}"></div>
+  <div id="saleReservation" :style="{height: '650px',marginTop:'-15px'}"></div>
 </template>
 
 <script>
