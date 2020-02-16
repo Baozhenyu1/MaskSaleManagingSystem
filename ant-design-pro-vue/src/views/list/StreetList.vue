@@ -1,7 +1,19 @@
 <template>
   <page-view title="街道填报信息表" logo="">
-    <a-card :bordered="false">
+    <a-card :bordered="true">
+      <a-table
+        size="small"
+        class="test-table"
+        :scroll="{x: 930, y: 3600}"
+        :columns="districtColumns"
+        :dataSource="dataTotal"
+        :pagination="districtPagination"
+        :loading="loading"
+        :bordered="bordered">
+      </a-table>
+    </a-card>
 
+    <a-card :bordered="false" style="margin-top: 12px">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
@@ -31,13 +43,19 @@
             </a-col>
 
             <a-col :md="8" :sm="24">
+              <a-form-item label="日期">
+                <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请选择日期"/>
+              </a-form-item>
+            </a-col>
+
+            <a-col :md="8" :sm="24">
               <a-form-item label="关键词">
                 <a-input v-model="queryParam.keyword" placeholder="请输入关键词"/>
               </a-form-item>
             </a-col>
 
 
-            <a-col :md="authority ? 20 : 8" :sm="24">
+            <a-col :md="authority ? 8 : 20" :sm="24">
             <span class="table-page-search-submitButtons"
                   :style="authority ? { float: 'right', overflow: 'hidden' } : { float: 'left', overflow: 'hidden' }">
               <a-button type="primary" @click="handleSearch">查询</a-button>
@@ -45,7 +63,7 @@
             </span>
             </a-col>
 
-            <a-col :md="authority ? 4 : 8" :sm="24">
+            <a-col :md="authority ? 8 : 4" :sm="24">
               <span class="table-page-search-submitButtons"
                     :style="{ float: 'right', overflow: 'hidden' }">
                 <a-button style="margin-bottom: 6px" type="primary" @click="download">下载表格</a-button>
@@ -83,6 +101,7 @@
   import {getStreetList} from '@/api/manage'
   import user from '@/store/modules/user'
   import moment from 'moment'
+  import { getStreetDistrictList } from '../../api/manage'
 
 
   function table2excel(jsonData, tips) {
@@ -128,7 +147,18 @@
           },
           {key: 4, title: '今日预约登记户数', dataIndex: 'appointed', width: '100px', className: 'table-header'},
           {key: 5, title: '累计预约登记户数', dataIndex: 'appointedTotal', width: '100px', className: 'table-header'}],
+        districtPagination:{pageSize: 20, hideOnSinglePage: true},
+        districtColumns:[
+          {dataIndex: 'district', key: '1', title: '市辖区', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'street_num', key: '2', title: '指定街道数量', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'report_num', key: '3', title: '上报街道数量', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'report_proportion', key: '4', title: '上报比例', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'today_r', key: '5', title: '上报街道今日预约登记户数', className: 'table-header', width: '130px', align: 'center'},
+          {dataIndex: 'total_r', key: '6', title: '上报街道累计预约登记户数', className: 'table-header', width: '130px', align: 'center'},
+          {dataIndex: 'date', key: '7', title: '统计日期', className: 'table-header', width: '110px', align: 'center'}
+        ],
         data: [],
+        dataTotal:[],
         pagination: {pageNo: 1, pageSize: 10},
         loading: false,
         bordered: true,
@@ -171,11 +201,9 @@
           }
           let districtString = para.district == '' ? (obj.authority ? '全上海市' : user.state.name) : para.district
           let reportedString = para.reported == 1 ? '已填报' : '未填报'
-
           let tips = districtString + '_' + reportedString + (para.keyword == '' ? '' : ('_' + para.keyword))
-
           table2excel(downloadList, tips)
-        })
+        });
       },
       handleSearch() {
         const obj = this
@@ -184,17 +212,29 @@
         const pagination = {...this.pagination};
 
         getStreetList(para).then(function (data) {
-          console.log("search:",data)
-          //pagination.total = data.all_count
           obj.pagination = pagination;
           pagination.total = data["total"];
           pagination.current = 1;
           obj.pushList(data["data"])
           obj.loading = false
         })
+        getStreetDistrictList({date: para['date']}).then(function (data) {
+          obj.dataTotal = []
+          // 上海市需要自己求和
+          if(user.state.name === "shanghai" && 'data' in data){
+            obj.dataTotal.push(obj.calTotal(data['data'],para['date']));
+          } else if('data' in data){
+            data['data'].forEach(item=>{
+              if(item['district'] === user.state.name){
+                item['report_proportion'] = (item["report_num"] / item["street_num"] * 100).toFixed(1) + "%";
+                item['date'] = para['date'];
+                obj.dataTotal.push(item);
+              }
+            })
+          }
+        });
       },
       handleTableChange(pagination, filters, sorter) {
-        console.log(pagination)
         const obj = this
 
         const para = this.getPara({pageNo: pagination.current, pageSize: pagination.pageSize})
@@ -208,8 +248,24 @@
           pagination.total = data["total"];
           obj.pushList(data["data"])
           obj.loading = false
-        })
+        });
 
+
+      },
+      calTotal(data,date){
+        let total = {}
+        let calKeys = ['street_num','report_num','today_r','total_r'];
+        data.forEach(item=>{
+          calKeys.forEach(key=>{
+            total[key] = key in total? parseInt(total[key] + item[key]):parseInt(item[key]);
+          })
+        })
+        if('street_num' in total){
+          total['date'] = date;
+          total['district'] = '全上海市';
+          total['report_proportion'] = (total["report_num"] / total["street_num"] * 100).toFixed(1) + "%";
+        }
+        return total;
       },
       pushList(data) {
         this.data = []
@@ -235,7 +291,20 @@
           pagination.total = data["total"];
           obj.pushList(data["data"])
           obj.loading = false
-        })
+        });
+        getStreetDistrictList({date: para['date']}).then(function (data) {
+          obj.dataTotal = []
+          // 上海市需要自己求和
+          if(user.state.name === "shanghai" && 'data' in data){
+            obj.dataTotal.push(obj.calTotal(data['data'],para['date']));
+          } else if('data' in data){
+            data['data'].forEach(item=>{
+              if(item['district'] === user.state.name){
+                obj.dataTotal.push(item);
+              }
+            })
+          }
+        });
       },
       filterOption(input, option) {
         return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -243,10 +312,9 @@
       getPara(parameter) {
         let para = {...parameter}
         para.district = this.queryParam.district ? (this.queryParam.district == "全上海市" ? "" : this.queryParam.district) : '';
+        para.date = (this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD"));
         para.reported = this.queryParam.reported || 1;
         para.keyword = this.queryParam.keyword || ''
-
-        console.log(para)
         return para
       }
     }

@@ -1,6 +1,19 @@
 <template>
   <page-view title="药店填报信息表" logo="">
-    <a-card :bordered="false">
+    <a-card :bordered="true">
+      <a-table
+        size="small"
+        class="test-table"
+        :scroll="{x: 930, y: 3600}"
+        :columns="districtColumns"
+        :dataSource="dataTotal"
+        :loading="loading"
+        :pagination="districtPagination"
+        :bordered="bordered">
+      </a-table>
+    </a-card>
+
+    <a-card :bordered="false" style="margin-top: 12px">
 
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -88,6 +101,7 @@
   import {getTableList} from '@/api/manage'
   import {PageView} from '@/layouts'
   import user from '@/store/modules/user'
+  import {getAnalysisList} from '@/api/manage'
 
   function table2excel(jsonData, tips) {
     //要导出的json数据
@@ -126,6 +140,7 @@
         pageTitle: '药店列表',
         logo: '',
         queryParam: {},
+        districtPagination:{pageSize: 20, hideOnSinglePage: true},
         pagination: {},
         bordered: true,
         resetted: false,
@@ -141,9 +156,21 @@
           {key: 5, title: '昨日结余', dataIndex: 'remain', width: '80px', className: 'table-header'},
           {key: 6, title: '已售数量', dataIndex: 'sold', width: '80px', className: 'table-header'},
           {key: 7, title: '损耗量', dataIndex: 'loss', width: '80px', className: 'table-header'},
-          {key: 8, title: '剩余库存量', dataIndex: 'inventory', width: '90px', className: 'table-header'},
+          {key: 8, title: '当前库存', dataIndex: 'inventory', width: '90px', className: 'table-header'},
           {key: 9, title: '修改时间', dataIndex: 'modificationTime', width: '110px', className: 'table-header'}
         ],
+        districtColumns:[
+          {dataIndex: 'district', key: '1', title: '市辖区', className: 'table-header', width: '90px', align: 'center'},
+          {dataIndex: 'store_num', key: '2', title: '指定药店数量', className: 'table-header', width: '110px', align: 'center'},
+          {dataIndex: 'post_num', key: '3', title: '上报药店数量', className: 'table-header', width: '110px', align: 'center'},
+          {dataIndex: 'quota', key: '4', title: '上报药店配额', className: 'table-header', width: '110px', align: 'center'},
+          {dataIndex: 'purchased', key: '5', title: '上报药店进货量', className: 'table-header', width: '130px', align: 'center'},
+          {dataIndex: 'yesterday', key: '6', title: '上报药店昨日结余', className: 'table-header', width: '110px', align: 'center'},
+          {dataIndex: 'loss', key: '7', title: '上报药店损耗量', className: 'table-header', width: '90px', align: 'center'},
+          {dataIndex: 'sell', key: '8', title: '上报药店售出量', className: 'table-header', width: '130px', align: 'center'},
+          {dataIndex: 'remain', key: '9', title: '上报药店当前库存', className: 'table-header', width: '110px', align: 'center'}
+        ],
+        dataTotal:[],
         authority: 1
       }
     },
@@ -153,20 +180,8 @@
       this.districtList = ["全上海市", "黄浦区","徐汇区","长宁区","静安区","普陀区","虹口区","杨浦区","闵行区","宝山区","嘉定区","浦东新区","金山区","松江区","青浦区","奉贤区","崇明区"];
     },
     methods: {
-      testApi() {
-        console.log("Test start")
-        let param = {
-          district: '',
-          is_sell_out: '',
-          is_submit: '',
-          date: '2020-02-03',
-          pageSize: 10,
-          pageNo: 1
-        }
-        console.log(param)
-        getTableList(param).then(function (data) {
-          console.log("We get: ",data)
-        });
+      cal_total(){
+
       },
       filterOption(input, option) {
         return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -189,8 +204,6 @@
           if (!this.refreshed)
             this.refreshed = true
         }
-        //console.log(this.data)
-        //console.log("finished")
       },
       init() {
         if (!this.resetted)
@@ -201,13 +214,22 @@
 
         this.loading = true
         getTableList(para).then(function (data) {
-          //console.log("tableList", data)
-
           obj.pagination = pagination;
           pagination.total = data["total"];
           obj.pushList(data["data"])
           obj.loading = false
         })
+        getAnalysisList({'date':para['date'], district: '区'}).then(function(data) {
+          obj.dataTotal = [];
+          let district = user.state.name === "shanghai"?'上海市':user.state.name;
+          if('data' in data){
+            data['data'].forEach(item=>{
+              if(item['district'] === district){
+                obj.dataTotal.push(item);
+              }
+            })
+          }
+        });
       },
       handleSearch() {
         const obj = this
@@ -216,25 +238,30 @@
         const pagination = {...this.pagination};
 
         getTableList(para).then(function (data) {
-          console.log("search:",data)
-          //pagination.total = data.all_count
           obj.pagination = pagination;
           pagination.total = data["total"];
           pagination.current = 1;
           obj.pushList(data["data"])
-
           obj.loading = false
-        })
+        });
+        getAnalysisList({'date':para['date']}).then(function(data) {
+          obj.dataTotal = [];
+          let district = user.state.name === "shanghai"?'上海市':user.state.name;
+          if('data' in data){
+            data['data'].forEach(item=>{
+              if(item['district'] === district){
+                obj.dataTotal.push(item);
+              }
+            })
+          }
+        });
       },
       handleTableChange(pagination, filters, sorter) {
-        console.log(pagination)
         const obj = this
-
         const para = this.getPara({pageNo: pagination.current, pageSize: pagination.pageSize})
         const raw_pagination = {...this.pagination};
         raw_pagination.current = pagination.current
         this.pagination = raw_pagination
-
         this.loading = true
         getTableList(para).then(function (data) {
           obj.pagination = pagination;
@@ -253,19 +280,14 @@
         this.init()
       },
       getPara(parameter) {
-
-        //console.log(parameter)
         let para = {...parameter}
         para.district = this.queryParam.district ? (this.queryParam.district == "全上海市" ? "" : this.queryParam.district) : '';
         para.reported = this.queryParam.reported || 1;
         para.date = (this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD"));
         para.keyword = this.queryParam.keyword || ''
-
-        console.log(para)
         return para
       },
       download() {
-        console.log("Start download")
         let para = {
           district: this.queryParam.district || '',
           reported: this.queryParam.reported || 1,
@@ -297,7 +319,6 @@
           let reportedString = para.reported == 1 ? '已填报' : '未填报'
 
           let tips = districtString + '_' + reportedString + (para.keyword == '' ? '' : ('_' + para.keyword)) + '_' + para.date
-
           table2excel(downloadList, tips)
         })
       }

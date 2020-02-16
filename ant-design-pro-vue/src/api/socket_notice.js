@@ -11,10 +11,6 @@ function initWebSocket() {
 
   if (user.state.token) {
     websock = new WebSocket(ws)
-
-    //console.log("init socket")
-    //console.log(user.state.token)
-
     websock.onmessage = function (e) {
       websocketonmessage(e)
     }
@@ -100,7 +96,6 @@ function websocketOpen(e) {
   websocketsend("TO/" + user.state.token)
 }
 
-initWebSocket()
 
 // 将方法暴露出去
 export {

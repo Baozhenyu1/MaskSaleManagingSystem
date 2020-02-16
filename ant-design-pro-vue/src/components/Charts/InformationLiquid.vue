@@ -82,9 +82,9 @@
               district: item['district'],
               pharmacyName: item['phar_name'],
               quota: item['phar_quota'],
-              distributed: item['phar_data_issued'],
+              distributed: item['phar_data_purchased'],
               balance: item['phar_data_balance'],
-              sold: item['phar_data_purchased'],
+              sold: item['phar_data_issued'],
               time: moment(item["phar_data_phar_date"]).fromNow(),
               firstLine: item['district'] + ' ' + item['phar_name'],
               url: '/profile/basic?id=' + item['phar_id']

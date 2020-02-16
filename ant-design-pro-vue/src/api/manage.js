@@ -4,6 +4,10 @@ const api = {
   test: '/mask/api-backend/ntest/?format=json',
   tableList: '/mask/api-backend/StoreTable/?format=json',
   analysisList: '/mask/api-backend/SellTable/?format=json',
+
+  //预约区域统计表
+  streetDistrictList: '/mask/api-backend/reserveTable/',
+
   deliveryList: '/mask/api-backend/deliveryTable/?format=json',
   quotaLIst: '/mask/api-backend/quotaTable/?format=json',
   lineChart: '/mask/api-backend/sellLineChart/?format=json',
@@ -132,6 +136,15 @@ export function getAnalysisList (parameter) {
     params: parameter
   })
 }
+
+export function getStreetDistrictList (parameter) {
+  return axios({
+    url: api.streetDistrictList,
+    method: 'get',
+    params: parameter
+  })
+}
+
 
 export function getWordCloud () {
   return axios({

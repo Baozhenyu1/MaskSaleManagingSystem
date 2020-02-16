@@ -5,7 +5,7 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">口罩调度配售信息管理系统</span>
+            <span class="title">口罩预约配售信息管理系统</span>
           </a>
         </div>
         <div class="desc">
@@ -19,7 +19,7 @@
           <div>上海市商务委员会&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上海市民政局</div>
         </div>
         <div class="copyright">
-          Copyright &copy; 2020 上海海宇信息技术有限公司
+          &copy; 2020 上海海宇信息技术有限公司
         </div>
       </div>
     </div>

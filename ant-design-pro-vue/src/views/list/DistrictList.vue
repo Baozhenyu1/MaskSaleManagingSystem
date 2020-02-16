@@ -146,18 +146,13 @@
         let obj = this
         this.loading = true
         getAnalysisList({district: '区', date: obj.defaultTime}).then(function (data) {
-          //console.log("District data", data)
           data = data["data"]
           obj.pushList(data)
-          //console.log("data", obj.data)
           obj.loading = false
         })
-
-
         this.loading = true
         this.dataTotal = []
         getAnalysisList({district: '上海市', date: obj.defaultTime}).then(function (data) {
-          //console.log("Shanghai data", data)
           data = data["data"]
           obj.dataTotal.push({
             district: data[0]["district"],
@@ -182,15 +177,12 @@
       handleSearch() {
         let date = this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")
         let para = {district: '区', date: date}
-        //console.log("para", para)
         let obj = this
         this.loading = true
         getAnalysisList(para).then(function(data) {
           data = data["data"]
           obj.pushList(data)
-
           obj.loading = false
-          //console.log("data", data)
         })
 
         this.loading = true

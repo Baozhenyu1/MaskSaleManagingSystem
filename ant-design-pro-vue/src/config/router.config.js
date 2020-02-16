@@ -19,20 +19,6 @@ export const asyncRouterMap = [
         meta: {title: '仪表盘', keepAlive: false, permission: ['dashboard'], icon: bxAnaalyse}
       },
       {
-        path: '/district-list',
-        name: 'DistrictListWrapper',
-        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-        component: () => import('@/views/list/DistrictList'),
-        meta: {title: '区域信息统计表', keepAlive: true, permission: ['table'], icon: 'calendar'}
-      },
-      {
-        path: '/appointment-list',
-        name: 'AppointmentListWrapper',
-        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-        component: () => import('@/views/list/AppointmentList'),
-        meta: {title: '预约销售统计表', keepAlive: true, permission: ['table'], icon: 'calendar'}
-      },
-      {
         path: '/table-list/:pageNo([1-9]\\d*)?',
         name: 'TableListWrapper',
         hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
@@ -40,11 +26,32 @@ export const asyncRouterMap = [
         meta: {title: '药店填报信息表', keepAlive: false, permission: ['table'], icon: 'table'}
       },
       {
+        path: '/district-list',
+        name: 'DistrictListWrapper',
+        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+        component: () => import('@/views/list/DistrictList'),
+        meta: {title: '药店填报区域统计表', keepAlive: true, permission: ['table'], icon: 'calendar'}
+      },
+      {
         path: '/street-list/:pageNo([1-9]\\d*)?',
         name: 'StreetListWrapper',
         hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
         component: () => import('@/views/list/StreetList'),
         meta: {title: '街道填报信息表', keepAlive: false, permission: ['table'], icon: 'table'}
+      },
+      {
+        path: '/street-district-list/:pageNo([1-9]\\d*)?',
+        name: 'StreetDistrictListWrapper',
+        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+        component: () => import('@/views/list/StreetDistrictList'),
+        meta: {title: '街道填报区域统计表', keepAlive: false, permission: ['table'], icon: 'table'}
+      },
+      {
+        path: '/appointment-list',
+        name: 'AppointmentListWrapper',
+        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+        component: () => import('@/views/list/AppointmentList'),
+        meta: {title: '预约销售统计表', keepAlive: true, permission: ['table'], icon: 'calendar'}
       },
       {
         path: '/report-list',

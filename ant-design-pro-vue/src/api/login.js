@@ -34,7 +34,6 @@ export function getInfo () {
 }
 
 export function logout (params) {
-  console.log(params)
   return axios({
     url: api.Logout,
     method: 'post',
