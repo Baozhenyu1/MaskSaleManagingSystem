@@ -151,11 +151,6 @@ export default {
         customActiveKey,
         Login
       } = this
-
-      //console.log('state', state)
-      //console.log('customActiveKey', customActiveKey)
-      //console.log('Login', Login)
-
       state.loginBtn = true
 
       const validateFieldsKey = customActiveKey === 'tab1' ? ['username', 'password'] : ['mobile', 'captcha']
@@ -163,13 +158,8 @@ export default {
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           const loginParams = { ...values }
-          console.log('paras:', loginParams)
-          delete loginParams.username
-          console.log('paras:', loginParams)
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
           loginParams.password = values.password
-          //this.loginSuccess()
-          console.log(loginParams)
           Login(loginParams)
             .then(res => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
@@ -230,7 +220,6 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log("login success")
       this.$router.push({ name: 'dashboard' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {

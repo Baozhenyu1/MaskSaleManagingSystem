@@ -171,7 +171,6 @@
 
       },
       download() {
-        console.log("download here")
         table2excel(this.data, this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD"))
       },
       handleSearch() {
@@ -188,7 +187,6 @@
         this.loading = true
         this.dataTotal = []
         getAnalysisList({district: '上海市', date: date}).then(function (data) {
-          console.log("Shanghai data", data)
           data = data["data"]
           obj.dataTotal.push({
             district: data[0]["district"],

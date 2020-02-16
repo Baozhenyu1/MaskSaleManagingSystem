@@ -9,6 +9,7 @@
         :dataSource="dataTotal"
         :pagination="districtPagination"
         :loading="loading"
+        rowKey="key"
         :bordered="bordered">
       </a-table>
     </a-card>
@@ -80,10 +81,11 @@
         :columns="columns"
         :dataSource="data"
         :pagination="pagination"
+        rowKey="key"
         :loading="loading"
         :bordered="bordered"
         @change="handleTableChange">
-        <span slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="text,record">
           <template>
               <div>
                 <a :href="record.url" target="_blank">{{record.name}}</a>
@@ -102,7 +104,8 @@
   import user from '@/store/modules/user'
   import moment from 'moment'
   import { getStreetDistrictList } from '../../api/manage'
-
+  import Vue from 'vue'
+  import { USERNAME } from '@/store/mutation-types'
 
   function table2excel(jsonData, tips) {
     //要导出的json数据
@@ -149,13 +152,13 @@
           {key: 5, title: '累计预约登记户数', dataIndex: 'appointedTotal', width: '100px', className: 'table-header'}],
         districtPagination:{pageSize: 20, hideOnSinglePage: true},
         districtColumns:[
-          {dataIndex: 'district', key: '1', title: '市辖区', className: 'table-header', width: '60px', align: 'center'},
-          {dataIndex: 'street_num', key: '2', title: '指定街道数量', className: 'table-header', width: '60px', align: 'center'},
-          {dataIndex: 'report_num', key: '3', title: '上报街道数量', className: 'table-header', width: '60px', align: 'center'},
-          {dataIndex: 'report_proportion', key: '4', title: '上报比例', className: 'table-header', width: '60px', align: 'center'},
-          {dataIndex: 'today_r', key: '5', title: '上报街道今日预约登记户数', className: 'table-header', width: '130px', align: 'center'},
-          {dataIndex: 'total_r', key: '6', title: '上报街道累计预约登记户数', className: 'table-header', width: '130px', align: 'center'},
-          {dataIndex: 'date', key: '7', title: '统计日期', className: 'table-header', width: '110px', align: 'center'}
+          {dataIndex: 'district', key: 1, title: '市辖区', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'street_num', key: 2, title: '指定街道数量', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'report_num', key: 3, title: '上报街道数量', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'report_proportion', key: 4, title: '上报比例', className: 'table-header', width: '60px', align: 'center'},
+          {dataIndex: 'today_r', key: 5, title: '上报街道今日预约登记户数', className: 'table-header', width: '130px', align: 'center'},
+          {dataIndex: 'total_r', key: 6, title: '上报街道累计预约登记户数', className: 'table-header', width: '130px', align: 'center'},
+          {dataIndex: 'date', key: 7, title: '统计日期', className: 'table-header', width: '110px', align: 'center'}
         ],
         data: [],
         dataTotal:[],
@@ -168,7 +171,7 @@
       }
     },
     created() {
-      this.authority = user.state.name == "shanghai"
+      this.authority = (Vue.ls.get(USERNAME) === "shanghai")
       this.init()
     },
     methods: {
@@ -188,6 +191,7 @@
         }
         let obj = this
         getStreetList(para).then(function(data) {
+          console.log(data)
           data = data["data"]
           let downloadList = []
           for (let i in data) {
@@ -212,6 +216,7 @@
         const pagination = {...this.pagination};
 
         getStreetList(para).then(function (data) {
+          console.log(data)
           obj.pagination = pagination;
           pagination.total = data["total"];
           pagination.current = 1;
@@ -221,11 +226,12 @@
         getStreetDistrictList({date: para['date']}).then(function (data) {
           obj.dataTotal = []
           // 上海市需要自己求和
-          if(user.state.name === "shanghai" && 'data' in data){
+          const username = Vue.ls.get(USERNAME);
+          if(username === "shanghai" && 'data' in data){
             obj.dataTotal.push(obj.calTotal(data['data'],para['date']));
           } else if('data' in data){
             data['data'].forEach(item=>{
-              if(item['district'] === user.state.name){
+              if(item['district'] === username){
                 item['report_proportion'] = (item["report_num"] / item["street_num"] * 100).toFixed(1) + "%";
                 item['date'] = para['date'];
                 obj.dataTotal.push(item);
@@ -262,6 +268,7 @@
         })
         if('street_num' in total){
           total['date'] = date;
+          total['key'] = 'total';
           total['district'] = '全上海市';
           total['report_proportion'] = (total["report_num"] / total["street_num"] * 100).toFixed(1) + "%";
         }

@@ -71,11 +71,13 @@
     //要导出的json数据
     let str = '市辖区,指定街道数量,上报街道数量,上报比例,上报街道今日预约量,上报街道累计预约量,统计日期\n';
     let keys = ['district','street_num','report_num','report_proportion','today_r','total_r','date'];
+    let value;
     jsonData.forEach(item =>{
       item['date'] = date;
       item['report_proportion'] = (item["report_num"] / item["street_num"] * 100).toFixed(1) + "%";
       keys.forEach(key=>{
-        str += `${item[key]},`;
+        value = String(item[key]).replace(/,/g, '、')
+        str += `${value},`;
       })
       str += '\t\n';
     })

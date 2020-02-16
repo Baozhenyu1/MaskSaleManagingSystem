@@ -84,6 +84,9 @@
         :loading="loading"
         :bordered="bordered"
         @change="handleTableChange">
+        <span slot="status" slot-scope="text">
+          <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
+        </span>
         <span slot="action" slot-scope="text, record">
           <template>
               <div>
@@ -102,17 +105,47 @@
   import {PageView} from '@/layouts'
   import user from '@/store/modules/user'
   import {getAnalysisList} from '@/api/manage'
+  import { USERNAME } from '@/store/mutation-types'
+  import Vue from 'vue'
+
+  const statusMap = {
+    0: {
+      status: 'processing',
+      text: '进货过少'
+    },
+    1: {
+      status: 'success',
+      text: '进货正常'
+    },
+    2: {
+      status: 'error',
+      text: '进货过多'
+    }
+  }
 
   function table2excel(jsonData, tips) {
     //要导出的json数据
-    let str = 'ID,市辖区,药店名,药店地址,联系人,联系电话,配额,进货量,昨日结余,已售数量,损耗量,剩余库存量,修改时间\n';
-    for (let i = 0; i < jsonData.length; i++) {
-      for (let item in jsonData[i]) {
-        let new_str = String(jsonData[i][item]).replace(/,/g, '、')
-        str += `${new_str},`;
+    let str = 'ID,市辖区,药店名,药店地址,联系人,联系电话,配额,进货量,昨日结余,已售数量,损耗量,剩余库存量,进货状态（进货量与配额相差20以内算正常）,修改时间\n';
+    let keys = ['phar_id','district','phar_name','phar_addr','phar_con_per','phar_con_tel','phar_quota','phar_data_purchased','remain',
+      'phar_data_issued','loss','phar_data_balance','status','phar_data_phar_date'];
+    let value;
+    jsonData.forEach(item=>{
+      item['status'] = '进货正常'
+      if(item['phar_data_purchased'] === '未填报'){
+        item['status'] = '未填报'
+      } else {
+        if(parseInt(item['phar_data_purchased']) + 20 <= parseInt(item['phar_quota'])){
+          item['status'] = '进货过少'
+        } else if(parseInt(item['phar_data_purchased']) - 20 >= parseInt(item['phar_quota'])){
+          item['status'] = '进货过多'
+        }
       }
+      keys.forEach(key=>{
+        value = String(item[key]).replace(/,/g, '、')
+        str += `${value},`;
+      })
       str += '\n';
-    }
+    })
     //encodeURIComponent解决中文乱码
     let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
     //通过创建a标签实现
@@ -150,14 +183,21 @@
         // 表头
         columns: [
           {key: 1, title: '市辖区', dataIndex: 'district', width: '100px', className: 'table-header'},
-          {key: 2, title: '药店名', dataIndex: 'pharmacyName', width: '300px', className: 'table-header', scopedSlots: {customRender: 'action'}},
+          {key: 2, title: '药店名', dataIndex: 'pharmacyName', width: '260px', className: 'table-header', scopedSlots: {customRender: 'action'}},
           {key: 3, title: '配额', dataIndex: 'distribution', width: '80px', className: 'table-header'},
           {key: 4, title: '进货量', dataIndex: 'distributed', width: '80px', className: 'table-header'},
           {key: 5, title: '昨日结余', dataIndex: 'remain', width: '80px', className: 'table-header'},
           {key: 6, title: '已售数量', dataIndex: 'sold', width: '80px', className: 'table-header'},
           {key: 7, title: '损耗量', dataIndex: 'loss', width: '80px', className: 'table-header'},
           {key: 8, title: '当前库存', dataIndex: 'inventory', width: '90px', className: 'table-header'},
-          {key: 9, title: '修改时间', dataIndex: 'modificationTime', width: '110px', className: 'table-header'}
+          {
+            key: 9,
+            title: '进货状态',
+            dataIndex: 'status',
+            scopedSlots: { customRender: 'status' },
+            width: '90px', className: 'table-header'
+          },
+          {key: 10, title: '修改时间', dataIndex: 'modificationTime', width: '110px', className: 'table-header'}
         ],
         districtColumns:[
           {dataIndex: 'district', key: '1', title: '市辖区', className: 'table-header', width: '90px', align: 'center'},
@@ -175,20 +215,31 @@
       }
     },
     created() {
-      this.authority = user.state.name == "shanghai"
+      this.authority = (Vue.ls.get(USERNAME) === "shanghai")
       this.init()
       this.districtList = ["全上海市", "黄浦区","徐汇区","长宁区","静安区","普陀区","虹口区","杨浦区","闵行区","宝山区","嘉定区","浦东新区","金山区","松江区","青浦区","奉贤区","崇明区"];
     },
-    methods: {
-      cal_total(){
-
+    filters: {
+      statusFilter (type) {
+        return statusMap[type].text
       },
+      statusTypeFilter (type) {
+        return statusMap[type].status
+      }
+    },
+    methods: {
       filterOption(input, option) {
         return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       },
       pushList(datas) {
         this.data = []
         for (let item in datas) {
+          let status = 1;
+          if(parseInt(datas[item]['phar_data_purchased']) + 20 <= parseInt(datas[item]['phar_quota'])){
+            status = 0;
+          } else if(parseInt(datas[item]['phar_data_purchased']) - 20 >= parseInt(datas[item]['phar_quota'])){
+            status = 2;
+          }
           this.data.push({
             district: datas[item]['district'],
             pharmacyName: datas[item]['phar_name'],
@@ -199,6 +250,7 @@
             loss: datas[item]['loss'],
             inventory: datas[item]['phar_data_balance'],
             modificationTime: datas[item]["phar_data_phar_date"],
+            status: status,
             url: '/profile/basic?id=' + datas[item]['phar_id']
           })
           if (!this.refreshed)
@@ -221,7 +273,8 @@
         })
         getAnalysisList({'date':para['date'], district: '区'}).then(function(data) {
           obj.dataTotal = [];
-          let district = user.state.name === "shanghai"?'上海市':user.state.name;
+          const username =  Vue.ls.get(USERNAME)
+          let district = username === "shanghai"?'上海市':username;
           if('data' in data){
             data['data'].forEach(item=>{
               if(item['district'] === district){
@@ -238,6 +291,7 @@
         const pagination = {...this.pagination};
 
         getTableList(para).then(function (data) {
+          console.log(data);
           obj.pagination = pagination;
           pagination.total = data["total"];
           pagination.current = 1;
@@ -246,7 +300,8 @@
         });
         getAnalysisList({'date':para['date']}).then(function(data) {
           obj.dataTotal = [];
-          let district = user.state.name === "shanghai"?'上海市':user.state.name;
+          const username =  Vue.ls.get(USERNAME)
+          let district = username === "shanghai"?'上海市':username;
           if('data' in data){
             data['data'].forEach(item=>{
               if(item['district'] === district){
@@ -296,30 +351,11 @@
         }
         let obj = this
         getTableList(para).then(function(datas) {
-          let downloadList = []
           datas = datas["data"]
-          for (let item in datas) {
-            downloadList.push({
-              id: datas[item]['phar_id'],
-              district: datas[item]['district'],
-              pharmacyName: datas[item]['phar_name'],
-              address: datas[item]['phar_addr'],
-              con: datas[item]['phar_con_per'],
-              tel: datas[item]['phar_con_tel'],
-              distribution: datas[item]['phar_quota'],
-              distributed: datas[item]['phar_data_purchased'],
-              remain: datas[item]['remain'],
-              sold: datas[item]['phar_data_issued'],
-              loss: datas[item]['loss'],
-              inventory: datas[item]['phar_data_balance'],
-              modificationTime: datas[item]["phar_data_phar_date"]
-            })
-          }
           let districtString = para.district == '' ? (obj.authority ? '全上海市' : user.state.name) : para.district
           let reportedString = para.reported == 1 ? '已填报' : '未填报'
-
           let tips = districtString + '_' + reportedString + (para.keyword == '' ? '' : ('_' + para.keyword)) + '_' + para.date
-          table2excel(downloadList, tips)
+          table2excel(datas, tips)
         })
       }
 

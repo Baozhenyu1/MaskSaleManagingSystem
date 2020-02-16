@@ -403,17 +403,14 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response
-
-          console.log(result)
-          console.log(userInfo)
-
           Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
+
           Vue.ls.set(USERNAME, userInfo["username"], 7 * 24 * 60 * 60 * 1000)
+          console.log(Vue.ls.get(USERNAME))
+          console.log(userInfo["username"])
           //Vue.ls.set(PASSWORD, userInfo["password"], 7 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result.token)
           commit('SET_NAME', { name: userInfo["username"], welcome: welcome() })
-
-          console.log(user)
 
           resolve()
         }).catch(error => {
@@ -425,10 +422,6 @@ const user = {
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         const result = userInfo
-
-        console.log("result", result)
-        console.log("user", user)
-
         if (result.role && result.role.permissions.length > 0) {
           result.role.permissions.map(per => {
             if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
