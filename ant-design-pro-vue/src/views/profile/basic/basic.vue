@@ -111,7 +111,7 @@
         getStoreDetail({phar_id: obj.$route.query.id}).then(function(data) {
           console.log("data", data)
           obj.pharmacyName = data["phar_name"]
-          obj.id = data["id"]
+          obj.id = data["phar_id"]
           obj.address = data["phar_addr"]
           obj.contactPerson = data["phar_con_per"]
           obj.tel = data["phar_con_tel"]
@@ -125,26 +125,26 @@
               name: com[i]["com_name"],
               com_per: com[i]["com_con_per"],
               tel: com[i]["com_con_tel"],
-              quota: '/',//com[i]["com_quota"],
+              quota: '/',
               quotaRate: parseFloat(com[i]["com_quota_rate"]).toFixed(3) + '%',
             })
           }
-          let keys = Object.keys(data["quota"])
           let days = data["days_data"]
           for (let i in days) {
+            let date = moment(days[i]["phar_date"]).format("YYYY-MM-DD");
             obj.data.push({
-              date: moment(days[i]["phar_date"]).format("YYYY-MM-DD"),
-              quota: data["quota"][keys[i]],
+              date: date,
+              quota: data["quota"][i]['quota'],
               purchased: days[i]["purchased"],
               sale: days[i]["issued"],
               loss: days[i]["loss"],
               balance: days[i]["balance"],
-              reported: (days[i]["tag"] == 1 ? '是' : '否')
+              reported: (parseInt(days[i]["tag"]) === 1 ? '是' : '否')
             })
             obj.purchasedTotal += parseInt(days[i]["purchased"])
             obj.saleTotal += parseInt(days[i]["issued"])
             obj.lossTotal += parseInt(days[i]["loss"])
-            obj.quotaTotal += parseInt(data["quota"][keys[i]])
+            obj.quotaTotal += parseInt(data["quota"][i]['quota'])
           }
           obj.data.push({
             date: '合计',

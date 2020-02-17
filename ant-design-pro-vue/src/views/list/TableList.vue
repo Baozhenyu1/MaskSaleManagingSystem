@@ -291,7 +291,6 @@
         const pagination = {...this.pagination};
 
         getTableList(para).then(function (data) {
-          console.log(data);
           obj.pagination = pagination;
           pagination.total = data["total"];
           pagination.current = 1;
