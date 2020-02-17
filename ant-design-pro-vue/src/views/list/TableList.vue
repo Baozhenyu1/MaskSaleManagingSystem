@@ -7,7 +7,7 @@
         :scroll="{x: 930, y: 3600}"
         :columns="districtColumns"
         :dataSource="dataTotal"
-        :loading="loading"
+        :loading="districtLoading"
         :pagination="districtPagination"
         :bordered="bordered">
       </a-table>
@@ -111,15 +111,19 @@
   const statusMap = {
     0: {
       status: 'processing',
-      text: '进货过少'
+      text: '偏少'
     },
     1: {
       status: 'success',
-      text: '进货正常'
+      text: '正常'
     },
     2: {
       status: 'error',
-      text: '进货过多'
+      text: '偏多'
+    },
+    3:{
+      status: 'default',
+      text: '未上报'
     }
   }
 
@@ -130,14 +134,14 @@
       'phar_data_issued','loss','phar_data_balance','status','phar_data_phar_date'];
     let value;
     jsonData.forEach(item=>{
-      item['status'] = '进货正常'
-      if(item['phar_data_purchased'] === '未填报'){
-        item['status'] = '未填报'
+      item['status'] = '正常'
+      if(item['phar_data_purchased'] === '未上报'){
+        item['status'] = '未上报'
       } else {
         if(parseInt(item['phar_data_purchased']) + 20 <= parseInt(item['phar_quota'])){
-          item['status'] = '进货过少'
+          item['status'] = '偏少'
         } else if(parseInt(item['phar_data_purchased']) - 20 >= parseInt(item['phar_quota'])){
-          item['status'] = '进货过多'
+          item['status'] = '偏多'
         }
       }
       keys.forEach(key=>{
@@ -177,8 +181,10 @@
         pagination: {},
         bordered: true,
         resetted: false,
+        districtLoading:false,
         loading: false,
         pageSize: 10,
+        queryDate:'',
         data: [],
         // 表头
         columns: [
@@ -231,14 +237,19 @@
       filterOption(input, option) {
         return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       },
+
       pushList(datas) {
         this.data = []
         for (let item in datas) {
           let status = 1;
-          if(parseInt(datas[item]['phar_data_purchased']) + 20 <= parseInt(datas[item]['phar_quota'])){
-            status = 0;
-          } else if(parseInt(datas[item]['phar_data_purchased']) - 20 >= parseInt(datas[item]['phar_quota'])){
-            status = 2;
+          if('未上报' === datas[item]['phar_data_purchased']){
+            status = 3;
+          } else {
+            if(parseInt(datas[item]['phar_data_purchased']) + 20 <= parseInt(datas[item]['phar_quota'])){
+              status = 0;
+            } else if(parseInt(datas[item]['phar_data_purchased']) - 20 >= parseInt(datas[item]['phar_quota'])){
+              status = 2;
+            }
           }
           this.data.push({
             district: datas[item]['district'],
@@ -263,7 +274,7 @@
         const obj = this
         const para = this.getPara({pageNo: 1, pageSize: this.pageSize})
         const pagination = {...this.pagination};
-
+        this.queryDate = para['date'];
         this.loading = true
         getTableList(para).then(function (data) {
           obj.pagination = pagination;
@@ -271,8 +282,10 @@
           obj.pushList(data["data"])
           obj.loading = false
         })
+        obj.districtLoading = true;
         getAnalysisList({'date':para['date'], district: '区'}).then(function(data) {
           obj.dataTotal = [];
+          obj.districtLoading = false;
           const username =  Vue.ls.get(USERNAME)
           let district = username === "shanghai"?'上海市':username;
           if('data' in data){
@@ -297,7 +310,13 @@
           obj.pushList(data["data"])
           obj.loading = false
         });
-        getAnalysisList({'date':para['date']}).then(function(data) {
+        if(this.queryDate === para['date']){
+          return;
+        }
+        this.queryDate = para['date'];
+        obj.districtLoading = true;
+        getAnalysisList({'date':para['date'], district: '区'}).then(function(data) {
+          obj.districtLoading = false;
           obj.dataTotal = [];
           const username =  Vue.ls.get(USERNAME)
           let district = username === "shanghai"?'上海市':username;

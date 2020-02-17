@@ -18,7 +18,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '口罩预约配售管理系统',
+      default: '口罩预约配售系统',
       required: false
     },
     showTitle: {

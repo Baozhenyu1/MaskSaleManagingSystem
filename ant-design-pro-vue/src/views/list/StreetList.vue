@@ -8,7 +8,7 @@
         :columns="districtColumns"
         :dataSource="dataTotal"
         :pagination="districtPagination"
-        :loading="loading"
+        :loading="districtLoading"
         rowKey="key"
         :bordered="bordered">
       </a-table>
@@ -151,7 +151,7 @@
           {key: 5, title: '今日预约登记户数', dataIndex: 'day_total', width: '100px', className: 'table-header'},
           {key: 6, title: '修改时间', dataIndex: 'm_time', width: '120px', className: 'table-header'},
           ],
-
+        queryDate:'',
         districtPagination:{pageSize: 20, hideOnSinglePage: true},
         districtColumns:[
           {dataIndex: 'district', key: 1, title: '市辖区', className: 'table-header', width: '60px', align: 'center'},
@@ -164,6 +164,7 @@
         ],
         data: [],
         dataTotal:[],
+        districtLoading:false,
         pagination: {pageNo: 1, pageSize: 10},
         loading: false,
         bordered: true,
@@ -232,8 +233,16 @@
           obj.pushList(data["data"],para.reported)
           obj.loading = false
         })
+        console.log(para['date'])
+        console.log(this.queryDate)
+        if(para['date'] === this.queryDate){
+          return;
+        }
+        this.queryDate = para['date'];
+        this.districtLoading = true;
         getStreetDistrictList({date: para['date']}).then(function (data) {
           obj.dataTotal = []
+          obj.districtLoading = false;
           // 上海市需要自己求和
           const username = Vue.ls.get(USERNAME);
           if(username === "shanghai" && 'data' in data){
@@ -261,7 +270,7 @@
         getStreetList(para).then(function (data) {
           obj.pagination = pagination;
           pagination.total = data["total"];
-          obj.pushList(data["data"])
+          obj.pushList(data["data"],para.reported)
           obj.loading = false
         });
 
@@ -308,8 +317,11 @@
           obj.pushList(data["data"],para.reported)
           obj.loading = false
         });
+        this.districtLoading = true;
+        this.queryDate = moment().format("YYYY-MM-DD")
         getStreetDistrictList({date: para['date']}).then(function (data) {
           obj.dataTotal = []
+          obj.districtLoading = false;
           const username = Vue.ls.get(USERNAME);
           // 上海市需要自己求和
           if(username === "shanghai" && 'data' in data){
@@ -317,6 +329,8 @@
           } else if('data' in data){
             data['data'].forEach(item=>{
               if(item['district'] === username){
+                item['date'] = para['date'];
+                item['report_proportion'] = (item["report_num"] / item["street_num"] * 100).toFixed(1) + "%";
                 obj.dataTotal.push(item);
               }
             })
