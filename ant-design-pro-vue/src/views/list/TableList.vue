@@ -351,7 +351,8 @@
         let obj = this
         getTableList(para).then(function(datas) {
           datas = datas["data"]
-          let districtString = para.district == '' ? (obj.authority ? '全上海市' : user.state.name) : para.district
+          let username = Vue.ls.get(USERNAME);
+          let districtString = para.district == '' ? (obj.authority ? '全上海市' : username) : para.district
           let reportedString = para.reported == 1 ? '已填报' : '未填报'
           let tips = districtString + '_' + reportedString + (para.keyword == '' ? '' : ('_' + para.keyword)) + '_' + para.date
           table2excel(datas, tips)

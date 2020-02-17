@@ -91,6 +91,8 @@
   import {getQuotaList} from '@/api/manage'
   import {PageView} from '@/layouts'
   import user from '@/store/modules/user'
+  import Vue from 'vue'
+  import { USERNAME } from '@/store/mutation-types'
 
   function table2excel(jsonData, substr) {
     //要导出的json数据
@@ -151,7 +153,8 @@
       }
     },
     created() {
-      this.authority = user.state.name == "shanghai"
+      let username = Vue.ls.get(USERNAME);
+      this.authority = username === "shanghai"
       this.loadColumns()
       this.init()
     },
@@ -205,9 +208,8 @@
         })
       },
       download() {
-        //console.log("download here")
-        //console.log(this.data)
-        let district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : user.state.name)
+        let username = Vue.ls.get(USERNAME);
+        let district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : username)
         let company = this.queryParam.company ? this.queryParam.company : '所有公司'
         let keyword = this.queryParam.keyword ? this.queryParam.keyword : ''
         let str = district + '_' + company + (keyword == '' ? '' : ('_' + keyword))

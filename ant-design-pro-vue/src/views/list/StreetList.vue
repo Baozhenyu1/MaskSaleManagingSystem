@@ -88,7 +88,7 @@
         <span slot="action" slot-scope="text,record">
           <template>
               <div>
-                <a :href="record.url" target="_blank">{{record.name}}</a>
+                <a :href="record.url" target="_blank">{{record.street_name}}</a>
               </div>
           </template>
         </span>
@@ -101,7 +101,6 @@
 <script>
   import {PageView} from '@/layouts'
   import {getStreetList} from '@/api/manage'
-  import user from '@/store/modules/user'
   import moment from 'moment'
   import { getStreetDistrictList } from '../../api/manage'
   import Vue from 'vue'
@@ -109,7 +108,7 @@
 
   function table2excel(jsonData, tips) {
     //要导出的json数据
-    let str = '市辖区,街道编号,街道名,今日预约登记户数,累计预约登记户数\n';
+    let str = '市辖区,街道编号,街道名,居委会数量,今日预约登记户数,修改时间\n';
     for (let i = 0; i < jsonData.length; i++) {
       for (let item in jsonData[i]) {
         let new_str = String(jsonData[i][item]).replace(/,/g, '、')
@@ -139,17 +138,20 @@
       return {
         columns: [
           {key: 1, title: '市辖区', dataIndex: 'district', width: '100px', className: 'table-header'},
-          {key: 2, title: '街道编号', dataIndex: 'id', width: '80px', className: 'table-header'},
+          {key: 2, title: '街道编号', dataIndex: 'street_id', width: '80px', className: 'table-header'},
           {
             key: 3,
             title: '街道名',
-            dataIndex: 'name',
-            width: '300px',
+            dataIndex: 'street_name',
+            width: '200px',
             className: 'table-header',
             scopedSlots: {customRender: 'action'}
           },
-          {key: 4, title: '今日预约登记户数', dataIndex: 'appointed', width: '100px', className: 'table-header'},
-          {key: 5, title: '累计预约登记户数', dataIndex: 'appointedTotal', width: '100px', className: 'table-header'}],
+          {key: 4, title: '居委会数量', dataIndex: 'com_num', width: '100px', className: 'table-header'},
+          {key: 5, title: '今日预约登记户数', dataIndex: 'day_total', width: '100px', className: 'table-header'},
+          {key: 6, title: '修改时间', dataIndex: 'm_time', width: '120px', className: 'table-header'},
+          ],
+
         districtPagination:{pageSize: 20, hideOnSinglePage: true},
         districtColumns:[
           {dataIndex: 'district', key: 1, title: '市辖区', className: 'table-header', width: '60px', align: 'center'},
@@ -185,27 +187,35 @@
       },
       download() {
         let para = {
-          district: this.queryParam.district ? (this.queryParam.district == "全上海市" ? "" : this.queryParam.district) : '',
+          district: this.queryParam.district ? (this.queryParam.district === "全上海市" ? "" : this.queryParam.district) : '',
           reported: this.queryParam.reported || 1,
+          date: (this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")),
           keyword: this.queryParam.keyword || ''
         }
         let obj = this
         getStreetList(para).then(function(data) {
-          console.log(data)
           data = data["data"]
           let downloadList = []
+          let m_time = '未提交';
+          let m_day_total = '未提交';
           for (let i in data) {
+            if(parseInt(para.reported)){
+              m_time = data[i]["m_time"]
+              m_day_total = data[i]["day_total"]
+            }
             downloadList.push({
               district: data[i]["district"],
               id: data[i]["street_id"],
               name: data[i]["street_name"],
-              appointed: data[i]["today_r"],
-              appointedTotal: data[i]["total_r"]
+              com_num: data[i]["com_num"],
+              appointed: m_day_total,
+              m_time: m_time
             })
           }
-          let districtString = para.district == '' ? (obj.authority ? '全上海市' : user.state.name) : para.district
-          let reportedString = para.reported == 1 ? '已填报' : '未填报'
-          let tips = districtString + '_' + reportedString + (para.keyword == '' ? '' : ('_' + para.keyword))
+          const username = Vue.ls.get(USERNAME);
+          let districtString = para.district === '' ? (obj.authority ? '全上海市' : username) : para.district
+          let reportedString = para.reported === 1 ? '已填报' : '未填报'
+          let tips = districtString + '_' + reportedString + (para.keyword === '' ? '' : ('_' + para.keyword))
           table2excel(downloadList, tips)
         });
       },
@@ -216,11 +226,10 @@
         const pagination = {...this.pagination};
 
         getStreetList(para).then(function (data) {
-          console.log(data)
           obj.pagination = pagination;
           pagination.total = data["total"];
           pagination.current = 1;
-          obj.pushList(data["data"])
+          obj.pushList(data["data"],para.reported)
           obj.loading = false
         })
         getStreetDistrictList({date: para['date']}).then(function (data) {
@@ -274,15 +283,15 @@
         }
         return total;
       },
-      pushList(data) {
+      pushList(data,reported) {
         this.data = []
         for (let i in data) {
+          if(!parseInt(reported)){
+            data[i]["m_time"] = '未提交';
+            data[i]["day_total"] = '未提交';
+          }
           this.data.push({
-            district: data[i]["district"],
-            id: data[i]["street_id"],
-            name: data[i]["street_name"],
-            appointed: data[i]["today_r"],
-            appointedTotal: data[i]["total_r"],
+           ...data[i],
             url: '/profile/streetInfo?id=' + data[i]["street_id"]
           })
         }
@@ -296,17 +305,18 @@
         getStreetList(para).then(function (data) {
           obj.pagination = pagination;
           pagination.total = data["total"];
-          obj.pushList(data["data"])
+          obj.pushList(data["data"],para.reported)
           obj.loading = false
         });
         getStreetDistrictList({date: para['date']}).then(function (data) {
           obj.dataTotal = []
+          const username = Vue.ls.get(USERNAME);
           // 上海市需要自己求和
-          if(user.state.name === "shanghai" && 'data' in data){
+          if(username === "shanghai" && 'data' in data){
             obj.dataTotal.push(obj.calTotal(data['data'],para['date']));
           } else if('data' in data){
             data['data'].forEach(item=>{
-              if(item['district'] === user.state.name){
+              if(item['district'] === username){
                 obj.dataTotal.push(item);
               }
             })
@@ -318,7 +328,7 @@
       },
       getPara(parameter) {
         let para = {...parameter}
-        para.district = this.queryParam.district ? (this.queryParam.district == "全上海市" ? "" : this.queryParam.district) : '';
+        para.district = this.queryParam.district ? (this.queryParam.district === "全上海市" ? "" : this.queryParam.district) : '';
         para.date = (this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD"));
         para.reported = this.queryParam.reported || 1;
         para.keyword = this.queryParam.keyword || ''
