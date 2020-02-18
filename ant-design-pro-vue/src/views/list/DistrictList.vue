@@ -1,6 +1,6 @@
 <template>
   <page-view title="区域信息统计表" logo="">
-    <a-card :bordered="true">
+    <a-card :bordered="true" v-if="authority">
       <a-table
         size="small"
         class="test-table"
@@ -13,7 +13,7 @@
       </a-table>
     </a-card>
 
-    <a-card :bordered="true" style="margin-top: 12px">
+    <a-card :bordered="true" style="margin-top: 12px" v-if="authority">
 
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -58,6 +58,9 @@
         :bordered="bordered">
       </a-table>
     </a-card>
+    <a-card v-if="!authority">
+      <span>没有查看权限</span>
+    </a-card>
   </page-view>
 </template>
 
@@ -65,7 +68,8 @@
   import {getAnalysisList} from '@/api/manage'
   import {PageView} from '@/layouts'
   import moment from 'moment'
-
+  import { USERNAME } from '@/store/mutation-types'
+  import Vue from 'vue'
 
   function table2excel(jsonData, date) {
     //要导出的json数据
@@ -119,11 +123,15 @@
         count: 0,
         queryParam: {},
         defaultTime: moment().format("YYYY-MM-DD"),
-        dataTotal: []
+        dataTotal: [],
+        authority:false,
       }
     },
     created() {
-      this.init()
+      this.authority = (Vue.ls.get(USERNAME) === 'shanghai');
+      if(this.authority){
+        this.init()
+      }
     },
     methods: {
       pushList(data) {

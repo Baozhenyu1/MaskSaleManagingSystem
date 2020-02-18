@@ -1,6 +1,6 @@
 <template>
   <page-view title="区域信息统计表" logo="">
-    <a-card :bordered="true">
+    <a-card :bordered="true" v-if="authority">
       <a-table
         size="small"
         class="test-table"
@@ -13,7 +13,7 @@
       </a-table>
     </a-card>
 
-    <a-card :bordered="true" style="margin-top: 12px">
+    <a-card :bordered="true" style="margin-top: 12px" v-if="authority">
 
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -46,8 +46,6 @@
           </a-row>
         </a-form>
       </div>
-
-
       <a-table
         size="small"
         :scroll="{x: 930, y: 3600}"
@@ -58,6 +56,9 @@
         :bordered="bordered">
       </a-table>
     </a-card>
+    <a-card v-if="!authority">
+      <span>没有查看权限</span>
+    </a-card>
   </page-view>
 </template>
 
@@ -65,16 +66,16 @@
   import {getStreetDistrictList} from '@/api/manage'
   import {PageView} from '@/layouts'
   import moment from 'moment'
-
+  import { USERNAME } from '@/store/mutation-types'
+  import Vue from 'vue'
 
   function table2excel(jsonData, date) {
     //要导出的json数据
     let str = '市辖区,指定街道数量,上报街道数量,上报比例,上报街道今日预约量,上报街道累计预约量,统计日期\n';
     let keys = ['district','street_num','report_num','report_proportion','today_r','total_r','date'];
     let value;
+    console.log(jsonData);
     jsonData.forEach(item =>{
-      item['date'] = date;
-      item['report_proportion'] = (item["report_num"] / item["street_num"] * 100).toFixed(1) + "%";
       keys.forEach(key=>{
         value = String(item[key]).replace(/,/g, '、')
         str += `${value},`;
@@ -110,6 +111,7 @@
           {dataIndex: 'date', key: '7', title: '统计日期', className: 'table-header', width: '110px', align: 'center'}
         ],
         data: [],
+        authority:false,
         loading: false,
         bordered: true,
         pagination: {pageSize: 20, hideOnSinglePage: true},
@@ -121,7 +123,10 @@
       }
     },
     created() {
-      this.init()
+      this.authority = (Vue.ls.get(USERNAME) === 'shanghai');
+      if(this.authority){
+        this.init()
+      }
     },
     methods: {
       pushList(data) {

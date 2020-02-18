@@ -14,7 +14,6 @@
       }
     },
     mounted () {
-      console.log("District", this.district)
       this.drawMap();
       this.updateData();
     },
@@ -126,7 +125,6 @@
     },
     watch: {
       'district': function(val) {
-          console.log("District changed", val)
           this.showHighlight(val.replace(/ /g, ''))
         }
     }

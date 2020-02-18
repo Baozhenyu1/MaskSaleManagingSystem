@@ -22,7 +22,6 @@
     },
     mounted () {
       this.draw()
-      console.log("line drwan")
       this.test()
     },
     methods: {
@@ -67,7 +66,6 @@
         this.myChart.setOption(this.option);
       },
       test() {
-        console.log("using test data")
         this.intnum = setInterval(_ => {
           //this.testData.splice(0, 1)
           //this.testData.push(Math.floor(Math.random() * 100) + 200)
@@ -81,7 +79,6 @@
               data: this.show_data
             }]
           });
-
           //this.sendData()
 
         }, 1000)
@@ -97,8 +94,6 @@
       show_data: {
         deep: true,
         handler (val, oldVal) {
-          //console.log('data new: %s, old: %s', val, oldVal)
-
           this.timeStamp.splice(0, 1)
           this.timeStamp.push(this.timeStamp[this.timeStamp.length - 1] + 1)
           this.myChart.setOption({

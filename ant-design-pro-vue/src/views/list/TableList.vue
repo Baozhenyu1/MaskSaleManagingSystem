@@ -103,7 +103,6 @@
   import moment from 'moment'
   import {getTableList} from '@/api/manage'
   import {PageView} from '@/layouts'
-  import user from '@/store/modules/user'
   import {getAnalysisList} from '@/api/manage'
   import { USERNAME } from '@/store/mutation-types'
   import Vue from 'vue'
@@ -189,19 +188,19 @@
         // 表头
         columns: [
           {key: 1, title: '市辖区', dataIndex: 'district', width: '100px', className: 'table-header'},
-          {key: 2, title: '药店名', dataIndex: 'pharmacyName', width: '260px', className: 'table-header', scopedSlots: {customRender: 'action'}},
+          {key: 2, title: '药店名', dataIndex: 'pharmacyName', width: '290px', className: 'table-header', scopedSlots: {customRender: 'action'}},
           {key: 3, title: '配额', dataIndex: 'distribution', width: '80px', className: 'table-header'},
           {key: 4, title: '进货量', dataIndex: 'distributed', width: '80px', className: 'table-header'},
           {key: 5, title: '昨日结余', dataIndex: 'remain', width: '80px', className: 'table-header'},
           {key: 6, title: '已售数量', dataIndex: 'sold', width: '80px', className: 'table-header'},
-          {key: 7, title: '损耗量', dataIndex: 'loss', width: '80px', className: 'table-header'},
-          {key: 8, title: '当前库存', dataIndex: 'inventory', width: '90px', className: 'table-header'},
+          {key: 7, title: '损耗量', dataIndex: 'loss', width: '70px', className: 'table-header'},
+          {key: 8, title: '当前库存', dataIndex: 'inventory', width: '75px', className: 'table-header'},
           {
             key: 9,
             title: '进货状态',
             dataIndex: 'status',
             scopedSlots: { customRender: 'status' },
-            width: '90px', className: 'table-header'
+            width: '70px', className: 'table-header'
           },
           {key: 10, title: '修改时间', dataIndex: 'modificationTime', width: '110px', className: 'table-header'}
         ],
@@ -291,6 +290,10 @@
           if('data' in data){
             data['data'].forEach(item=>{
               if(item['district'] === district){
+                const report = parseInt(item['post_num']);
+                const store = parseInt(item['store_num']);
+                const proportion = store?((report / store * 100).toFixed(1) + "%"):"0.0%";
+                item['post_num'] = item['post_num'] + " (" + proportion + ")"
                 obj.dataTotal.push(item);
               }
             })
@@ -323,6 +326,10 @@
           if('data' in data){
             data['data'].forEach(item=>{
               if(item['district'] === district){
+                const report = parseInt(item['post_num']);
+                const store = parseInt(item['store_num']);
+                const proportion = store?((report / store * 100).toFixed(1) + "%"):"0.0%";
+                item['post_num'] = item['post_num'] + " (" + proportion + ")"
                 obj.dataTotal.push(item);
               }
             })

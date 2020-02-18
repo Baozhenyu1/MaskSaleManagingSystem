@@ -1,6 +1,6 @@
 <template>
   <page-view title="配送企业提货表" logo="">
-    <a-card v-if="authority == 1" :bordered="false">
+    <a-card v-if="authority === 1" :bordered="false">
       <a-button style="margin-bottom: 6px" type="primary" @click="download">下载表格</a-button>
       <a-table
         size="small"
@@ -66,7 +66,7 @@
         pagination: {pageSize: 60, hideOnSinglePage: true},
         quotaTotal: 0,
         count: 0,
-        authority: 1
+        authority: 0
       }
     },
     created() {
@@ -77,11 +77,10 @@
         let obj = this
         this.loading = true
         getDeliveryList().then(function(data) {
-          console.log(data)
-
-          if (data["authority"] == 0) {
-            obj.authority = 0
+          if (data["authority"] === 0) {
+            obj.authority = 0;
           } else {
+            obj.authority = 1;
             obj.quotaTotal = data["total_quota"]
             obj.count = data["store_count"]
             data = data["data"]
@@ -107,7 +106,6 @@
         })
       },
       download() {
-        console.log("download here")
         table2excel(this.data)
       }
     }

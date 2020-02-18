@@ -138,7 +138,7 @@
       </a-col>
     </a-row>
 
-    <a-card title="实时全市统计表" style="margin-bottom: 12px">
+    <a-card title="实时全市统计表" style="margin-bottom: 12px" v-if="authority">
       <a-table
         size="small"
         class="test-table"
@@ -151,7 +151,7 @@
       </a-table>
     </a-card>
 
-    <a-card title="实时区域信息表">
+    <a-card title="实时区域信息表" v-if="authority">
 
       <template>
         <a-table
@@ -183,6 +183,9 @@
 <script>
 
   import moment from 'moment'
+  import { USERNAME } from '@/store/mutation-types'
+  import Vue from 'vue'
+
   import {
     MapInformation,
     ChartCard,
@@ -252,10 +255,12 @@
         loss: 0,
         dataTotal: [],
         dataTotalTmp: [],
-        highlight: ''
+        highlight: '',
+        authority:false,
       }
     },
     created() {
+      this.authority = (Vue.ls.get(USERNAME) === 'shanghai');
       setTimeout(() => {
         this.loading = !this.loading
       }, 1000)
@@ -386,8 +391,6 @@
         } else {
           // 实例化socket
           this.socket = new WebSocket(this.path)
-
-          console.log("链接成功")
           // 监听socket连接
           this.socket.onopen = this.websocketonopen
           // 监听socket错误信息
@@ -431,7 +434,6 @@
           this.inventoryTotal = parseInt(tmp[2]);
           this.updateSalePercentage()
         } else if (tmp[0] == "D") {
-          //console.log("loss", tmp)
           this.distributed = parseInt(tmp[1]);
           this.distributedTotal = parseInt(tmp[2]);
           this.loss = parseInt(tmp[3])
@@ -447,30 +449,23 @@
         } else if (tmp[0] == "C") {
           this.reportTimes = parseInt(tmp[1]);
         } else if (tmp[0] == "MAP") {
-          console.log("highlight")
           if (tmp[1] == this.highlight) {
             this.highlight = tmp[1] + ' '
           } else {
             this.highlight = tmp[1]
           }
         } else {
-          //console.log("Unknown message", tmp)
         }
       },
       websocketonerror() {
-        console.log("连接失败，尝试重启")
-        //this.initWebSocket()
       },
       websocketsend(Data) {//数据发送
         this.socket.send(Data);
       },
       websocketclose(e) {  //关闭
-        //this.openNotification("websocket closed")
-        console.log('断开连接', e);
+
       },
       websocketonopen() {
-        //this.websocketsend("dashboard")
-        console.log("我，准备好了")
       },
       filterOption(input, option) {
         return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0

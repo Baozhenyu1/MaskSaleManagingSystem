@@ -41,7 +41,6 @@
     },
     methods: {
       ScrollUp() {
-        console.log("start to scroll")
         const obj = this
         obj.activeIndex += 0.000000000000001
         this.intnum = setInterval(_ => {
@@ -50,30 +49,22 @@
             if (obj.prizeList.length - obj.activeIndex <= 15 && !obj.updated) {
               obj.updateInfoFlow();
               obj.updated = true;
-              //console.log("tmpList updated")
             }
           } else {
             obj.activeIndex = 0;
             obj.updated = false;
             Object.assign(obj.prizeList, obj.tmpList);
-            //console.log("prizeList updated")
-
           }
-          //console.log("prizeList size:" + this.prizeList.length)
-          //console.log("tmpList size:" + this.tmpList.length)
         }, 1500)
 
       },
       start() {
-        console.log("Start to load info flow");
         this.updateInfoFlow()
       },
       updateInfoFlow() {
-        //console.log("start to update")
         const obj = this
         getTableList({pageNo: 1, pageSize: 50}).then(function (datas) {
           const datas1 = datas["data"]
-          //console.log(datas)
           obj.tmpList = []
           for (let i = 0; i < datas1.length; i++) {
             const item = datas1[i];

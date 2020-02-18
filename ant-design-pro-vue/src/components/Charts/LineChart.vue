@@ -19,8 +19,6 @@
     },
     mounted() {
       this.draw()
-      console.log("line drwan")
-      //this.test()
     },
     methods: {
       draw() {
@@ -70,10 +68,7 @@
         this.myChart.setOption(this.option);
       },
       test() {
-        console.log("using test data")
         this.intnum = setInterval(_ => {
-          //this.testData.splice(0, 1)
-          //this.testData.push(Math.floor(Math.random() * 100) + 200)
           this.timeStamp.splice(0, 1)
           this.timeStamp.push(this.timeStamp[this.timeStamp.length - 1] + 1)
           this.myChart.setOption({
@@ -84,9 +79,6 @@
               data: this.show_data
             }]
           });
-
-          //this.sendData()
-
         }, 1000)
       }
     }

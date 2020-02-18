@@ -1,13 +1,14 @@
 <template>
   <page-view  logo="https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png">
     <detail-list slot="headerContent" size="medium" :col="2" class="detail-layout">
-      <detail-list-item term="药店名">{{ pharmacyName }}</detail-list-item>
-      <detail-list-item term="药店 ID">{{ id }}</detail-list-item>
-      <detail-list-item term="地址">{{ address }}</detail-list-item>
-      <detail-list-item term="联系人">{{ contactPerson }}</detail-list-item>
-      <detail-list-item term="电话">{{ tel }}</detail-list-item>
-      <detail-list-item term="配送公司">{{ delivery }}</detail-list-item>
-      <detail-list-item term="配额">{{ quota }}</detail-list-item>
+      <detail-list-item term="药店名">{{ detail.pharmacyName }}</detail-list-item>
+      <detail-list-item term="药店 ID">{{ detail.id }}</detail-list-item>
+      <detail-list-item term="地址">{{ detail.address }}</detail-list-item>
+      <detail-list-item term="联系人">{{ detail.contactPerson }}</detail-list-item>
+      <detail-list-item term="电话">{{ detail.tel }}</detail-list-item>
+      <detail-list-item term="配送公司">{{ detail.delivery }}</detail-list-item>
+      <detail-list-item term="配额">{{ detail.quota }}</detail-list-item>
+<!--      <a @click="handleEdit(detail)">编辑基本信息</a>-->
     </detail-list>
 
     <a-card
@@ -27,6 +28,65 @@
 
     </a-card>
 
+    <a-modal
+      title="编辑基本信息"
+      style="top: 20px;"
+      :width="800"
+      v-model="visible"
+      @ok="handleOk"
+    >
+      <a-form :autoFormCreate="(form)=>{this.form = form}">
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="药店 ID"
+          hasFeedback
+        >
+          <a-input placeholder="药店 ID" v-model="mdl.id" id="phar_id" disabled="disabled" />
+        </a-form-item>
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="药店名"
+          hasFeedback
+          validateStatus="success"
+        >
+          <a-input placeholder="药店名" v-model="mdl.pharmacyName" id="phar_name" />
+        </a-form-item>
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="地址"
+          hasFeedback
+          validateStatus="success"
+        >
+          <a-input placeholder="地址" v-model="mdl.address" id="phar_addr" />
+        </a-form-item>
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="联系人"
+          hasFeedback
+        >
+          <a-input placeholder="联系人" v-model="mdl.contactPerson" id="phar_con_per" />
+        </a-form-item>
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="联系电话"
+          hasFeedback
+        >
+          <a-input placeholder="联系电话" v-model="mdl.tel" id="phar_con_per" />
+
+        </a-form-item>
+
+      </a-form>
+    </a-modal>
     <a-card
       class="project-list"
       style="margin-bottom: 24px; margin-top: 24px"
@@ -44,7 +104,6 @@
       </a-table>
 
     </a-card>
-
 
 
   </page-view>
@@ -84,24 +143,24 @@
                       {title: '损耗', dataIndex: 'loss', key: '5', width: 120, className: 'table-header'},
                       {title: '库存', dataIndex: 'balance', key: '6', width: 120, className: 'table-header'},
                       {title: '是否上报', dataIndex: 'reported', key: '7', width: 120, className: 'table-header'}],
-        pharmacyName: '',
-        id: '',
-        address: '',
-        contactPerson: '',
-        tel: '',
-        delivery: '',
-        quota: '',
+        detail:{},
         pagination_data: {pageSize: 41, hideOnSinglePage: true},
         pagination_com: {pageSize: 10, hideOnSinglePage: true},
         bordered: true,
-        purchasedTotal: 0,
-        saleTotal: 0,
-        lossTotal: 0,
-        quotaTotal: 0
+        visible:false,
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 5 }
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 }
+        },
+        form: null,
+        mdl:{},
       }
     },
     created() {
-      console.log('id',this.$route.query.id)
       this.loadData()
     },
     methods: {
@@ -109,56 +168,70 @@
         this.loading = true
         let obj = this
         getStoreDetail({phar_id: obj.$route.query.id}).then(function(data) {
-          console.log("data", data)
-          obj.pharmacyName = data["phar_name"]
-          obj.id = data["phar_id"]
-          obj.address = data["phar_addr"]
-          obj.contactPerson = data["phar_con_per"]
-          obj.tel = data["phar_con_tel"]
-          obj.delivery = data["company"]
-          obj.quota = data["phar_quota"]
+          obj.detail.pharmacyName = data["phar_name"]
+          obj.detail.id = data["phar_id"]
+          obj.detail.address = data["phar_addr"]
+          obj.detail.contactPerson = data["phar_con_per"]
+          obj.detail.tel = data["phar_con_tel"]
+          obj.detail.delivery = data["company"]
+          obj.detail.quota = data["phar_quota"]
 
 
           let com = data["cor_committee"]
-          for (let i in com) {
-            obj.comData.push({
-              name: com[i]["com_name"],
-              com_per: com[i]["com_con_per"],
-              tel: com[i]["com_con_tel"],
-              quota: '/',
-              quotaRate: parseFloat(com[i]["com_quota_rate"]).toFixed(3) + '%',
+          if(com){
+            com.forEach(item=>{
+              obj.comData.push({
+                name: item["com_name"],
+                com_per: item["com_con_per"],
+                tel: item["com_con_tel"],
+                quota: '/',
+                quotaRate: parseFloat(item["com_quota_rate"]).toFixed(3) + '%',
+              })
             })
           }
           let days = data["days_data"]
-          for (let i in days) {
-            let date = moment(days[i]["phar_date"]).format("YYYY-MM-DD");
+          let purchasedTotal = 0;
+          let saleTotal = 0;
+          let lossTotal = 0;
+          let quotaTotal = 0;
+          let index = 0;
+          days.forEach(item=>{
             obj.data.push({
-              date: date,
-              quota: data["quota"][i]['quota'],
-              purchased: days[i]["purchased"],
-              sale: days[i]["issued"],
-              loss: days[i]["loss"],
-              balance: days[i]["balance"],
-              reported: (parseInt(days[i]["tag"]) === 1 ? '是' : '否')
+              date: moment(item["phar_date"]).format("YYYY-MM-DD"),
+              quota: data["quota"][index]['quota'],
+              purchased: item["purchased"],
+              sale: item["issued"],
+              loss: item["loss"],
+              balance: item["balance"],
+              reported: (parseInt(item["tag"]) === 1 ? '是' : '否')
             })
-            obj.purchasedTotal += parseInt(days[i]["purchased"])
-            obj.saleTotal += parseInt(days[i]["issued"])
-            obj.lossTotal += parseInt(days[i]["loss"])
-            obj.quotaTotal += parseInt(data["quota"][i]['quota'])
-          }
+            purchasedTotal += parseInt(item["purchased"])
+            saleTotal += parseInt(item["issued"])
+            lossTotal += parseInt(item["loss"])
+            quotaTotal += parseInt(data["quota"][index]['quota'])
+            index++;
+          })
+
           obj.data.push({
             date: '合计',
-            quota: obj.quotaTotal,
-            purchased: obj.purchasedTotal,
-            sale: obj.saleTotal,
-            loss: obj.lossTotal,
+            quota: quotaTotal,
+            purchased: purchasedTotal,
+            sale: saleTotal,
+            loss: lossTotal,
             balance: '/',
             reported: '/'
           })
-
           obj.loading = false
         })
-      }
+      },
+      handleEdit (record) {
+        this.mdl = Object.assign({}, record)
+        this.visible = true
+      },
+      handleOk () {
+        this.detail = Object.assign({}, this.mdl)
+        this.visible = false;
+      },
     }
   }
 </script>

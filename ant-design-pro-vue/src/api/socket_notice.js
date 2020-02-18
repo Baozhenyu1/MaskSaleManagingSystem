@@ -27,8 +27,6 @@ function initWebSocket() {
     }
   } else {
     setTimeout(function () {
-      //console.log("Waiting for login")
-      //console.log(user.state.token)
       initWebSocket()
     }, 100)
   }
@@ -36,10 +34,8 @@ function initWebSocket() {
 
 // 实际调用的方法
 function sendSock(agentData, callback) {
-  //console.log("in sendsock")
 
   if (websock) {
-    //console.log(user.state.token)
     globalCallback = callback
     if (websock.readyState === websock.OPEN) {
       // 若是ws开启状态
@@ -57,7 +53,6 @@ function sendSock(agentData, callback) {
     }
   } else {
     setTimeout(function () {
-      //console.log("Waiting for ws")
       sendSock(agentData, callback)
     }, 100)
   }
@@ -87,12 +82,10 @@ function websocketsend(agentData) {
 
 // 关闭
 function websocketclose(e) {
-  console.log('connection closed (' + e.code + ')')
 }
 
 // 创建 websocket 连接
 function websocketOpen(e) {
-  console.log('连接成功')
   websocketsend("TO/" + user.state.token)
 }
 

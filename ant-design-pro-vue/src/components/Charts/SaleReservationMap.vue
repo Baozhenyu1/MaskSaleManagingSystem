@@ -51,18 +51,13 @@
           }
         },
         visualMap: {
-          type:'piecewise',
           left: 'right',
           top:'top',
           precision: 2, //小数精度为两位小数
-          pieces:[
-            {'min':0,'max':0.50, label:'0%-50%'},
-            {'min':0.5,'max':0.6, label:'50%-60%'},
-            {'min':0.6,'max':0.7, label:'60%-70%'},
-            {'min':0.7,'max':0.9, label:'70%-90%'},
-            {'min':0.9,'max':1.0, label:'90%-100%'},
-          ],
-          color: ['#FAF1D0','#F9A78F','#EA5F58', '#D23338','#8A2128']
+          inRange: {
+            color: ['#8A2128','#D23338', '#EA5F58', '#F9A78F',  '#FAF1D0']
+          },
+          text: ['100%','0%']
         },
         toolbox: {
           show: true,
@@ -87,6 +82,32 @@
         this.myChart.hideLoading();
         this.myChart.setOption(option);
       },
+      calMin(data){
+        let districts = ['宝山区', '崇明区', '奉贤区', '虹口区',
+          '黄浦区', '嘉定区', '金山区', '静安区',
+          '闵行区', '浦东新区', '普陀区', '青浦区',
+          '松江区', '徐汇区', '杨浦区', '长宁区'];
+        let min = 1;
+        districts.forEach(district=>{
+          if(data[district] < min){
+            min = data[district];
+          }
+        })
+        return min;
+      },
+      calMax(data){
+        let districts = ['宝山区', '崇明区', '奉贤区', '虹口区',
+          '黄浦区', '嘉定区', '金山区', '静安区',
+          '闵行区', '浦东新区', '普陀区', '青浦区',
+          '松江区', '徐汇区', '杨浦区', '长宁区'];
+        let max = 0;
+        districts.forEach(district=>{
+          if(data[district] > max){
+            max = data[district];
+          }
+        })
+        return max;
+      },
       updateData () {
         let districts = ['宝山区', '崇明区', '奉贤区', '虹口区',
           '黄浦区', '嘉定区', '金山区', '静安区',
@@ -97,7 +118,16 @@
           let handledData = districts.map(district=>{
             return {'name':district, 'value':data[district]}
           });
+          let min = obj.calMin(data);
+          let max = obj.calMax(data);
+          let minText = (min * 100).toFixed(2) + '%';
+          let maxText = (max * 100).toFixed(2) + '%';
           obj.myChart.setOption({
+            visualMap:{
+              min:min,
+              max:max,
+              text: [maxText,minText]
+            },
             series: [
               {
                 type: 'map',

@@ -90,7 +90,6 @@
 <script>
   import {getQuotaList} from '@/api/manage'
   import {PageView} from '@/layouts'
-  import user from '@/store/modules/user'
   import Vue from 'vue'
   import { USERNAME } from '@/store/mutation-types'
 
@@ -148,7 +147,7 @@
         storeCount: 0,
         districtList: ["全上海市", "黄浦区","徐汇区","长宁区","静安区","普陀区",
                         "虹口区","杨浦区","闵行区","宝山区","嘉定区","浦东新区","金山区","松江区","青浦区","奉贤区","崇明区"],
-        authority: 1
+        authority: 0
 
       }
     },
@@ -199,7 +198,6 @@
         let obj = this
         this.loading = true
         getQuotaList().then(function (data) {
-          console.log("Quota", data)
           obj.quotaTotal = data["total_quota"]
           obj.storeCount = data["store_count"]
           data = data["data"]

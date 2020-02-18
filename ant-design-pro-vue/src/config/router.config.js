@@ -11,12 +11,18 @@ export const asyncRouterMap = [
     meta: {title: '首页'},
     redirect: '/analysis',
     children: [
-      // dashboard
       {
         path: '/analysis',
         name: 'dashboard',
         component: () => import('@/views/dashboard/Analysis'),
         meta: {title: '仪表盘', keepAlive: false, permission: ['dashboard'], icon: bxAnaalyse}
+      },
+      {
+        path: '/distribution-list',
+        name: 'DistributionListWrapper',
+        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+        component: () => import('@/views/list/DistributionList'),
+        meta: {title: '药店分发表', keepAlive: true, permission: ['table'], icon: 'calendar'}
       },
       {
         path: '/table-list/:pageNo([1-9]\\d*)?',
@@ -25,26 +31,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/list/TableList'),
         meta: {title: '药店填报信息表', keepAlive: false, permission: ['table'], icon: 'table'}
       },
-      {
-        path: '/district-list',
-        name: 'DistrictListWrapper',
-        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-        component: () => import('@/views/list/DistrictList'),
-        meta: {title: '药店填报区域统计表', keepAlive: true, permission: ['table'], icon: 'calendar'}
-      },
+
       {
         path: '/street-list/:pageNo([1-9]\\d*)?',
         name: 'StreetListWrapper',
         hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
         component: () => import('@/views/list/StreetList'),
         meta: {title: '街道填报信息表', keepAlive: false, permission: ['table'], icon: 'table'}
-      },
-      {
-        path: '/street-district-list/:pageNo([1-9]\\d*)?',
-        name: 'StreetDistrictListWrapper',
-        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-        component: () => import('@/views/list/StreetDistrictList'),
-        meta: {title: '街道填报区域统计表', keepAlive: false, permission: ['table'], icon: 'table'}
       },
       {
         path: '/appointment-list',
@@ -61,11 +54,18 @@ export const asyncRouterMap = [
         meta: {title: '配送企业提货表', keepAlive: true, permission: ['table'], icon: 'calendar'}
       },
       {
-        path: '/distribution-list',
-        name: 'DistributionListWrapper',
+        path: '/district-list',
+        name: 'DistrictListWrapper',
         hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-        component: () => import('@/views/list/DistributionList'),
-        meta: {title: '药店分发表', keepAlive: true, permission: ['table'], icon: 'calendar'}
+        component: () => import('@/views/list/DistrictList'),
+        meta: {title: '药店填报区域统计表', keepAlive: true, permission: ['table'], icon: 'calendar'}
+      },
+      {
+        path: '/street-district-list/:pageNo([1-9]\\d*)?',
+        name: 'StreetDistrictListWrapper',
+        hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+        component: () => import('@/views/list/StreetDistrictList'),
+        meta: {title: '街道填报区域统计表', keepAlive: false, permission: ['table'], icon: 'table'}
       },
       // profile
       {
