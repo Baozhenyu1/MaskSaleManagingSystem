@@ -55,44 +55,29 @@
   import { getSellReserveList } from '@/api/manage'
   import { USERNAME } from '@/store/mutation-types'
   import Vue from 'vue'
+  import json2excel from '@/utils/json2excel';
 
-
-  function table2excel(jsonData, date, authority) {
+  function table2excel(jsonData, date, authority){
     //要导出的json数据
-    let str = '区,当日预约户数,累计预约户数,累计预约户数占比,当日销售个数,累计销售个数,实际购买到口罩户数,销售数/预约数\n';
+    let head = ['区','当日预约户数','累计预约户数','累计预约户数占比','当日销售个数','累计销售个数','实际购买到口罩户数','销售数/预约数'];
     let keys = ['district','day_reserve','total_reserve','reserve_proportion','day_sell','total_sell','total_buy','sell_reserve']
-    let fileName = authority + "口罩预约销售统计表(" + date + ").csv"
+    let title = authority + "口罩预约销售统计表(" + date + ")";
+    let data = [];
     if(authority !== 'shanghai'){
       jsonData.forEach(item => {
         if(item['district'] === authority){
           item['district'] = String(item['district']).substr(0,2)
-          keys.forEach(key =>{
-            str += `${item[key]},`;
-          })
-          str += '\n';
+          data.push(item);
         }
       });
+      jsonData = data;
     } else {
-      fileName = "全市口罩预约销售统计表(" + date + ").csv"
+      title = "全市口罩预约销售统计表(" + date + ")"
       jsonData.forEach(item => {
         item['district'] = String(item['district']).substr(0,2)
-        keys.forEach(key =>{
-          str += `${item[key]},`;
-        })
-        str += '\n';
       });
     }
-
-    //encodeURIComponent解决中文乱码
-    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    //通过创建a标签实现
-    let link = document.createElement("a");
-    link.href = uri;
-    //对下载的文件命名
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    json2excel(jsonData,head,keys,title);
   }
 
   export default {

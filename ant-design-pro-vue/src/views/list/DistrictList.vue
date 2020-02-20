@@ -70,31 +70,21 @@
   import moment from 'moment'
   import { USERNAME } from '@/store/mutation-types'
   import Vue from 'vue'
+  import json2excel from '@/utils/json2excel';
 
   function table2excel(jsonData, date) {
     //要导出的json数据
-    let str = '市辖区,指定药店数量,上报药店数量,上报比例,上报药店配额,上报药店进货量,昨日售后结余,损耗量,上报药店售出量,售出比例,当前库存\n';
-    for (let i = 0; i < jsonData.length; i++) {
-      for (let item in jsonData[i]) {
-        if (item == "reported" || item == "sale") {
-          let new_str = jsonData[i][item].replace(" ", "").replace("(", ",").replace(")", ",")
-          str += new_str;
-        } else {
-          str += `${jsonData[i][item]},`;
-        }
-      }
-      str += '\n';
-    }
-    //encodeURIComponent解决中文乱码
-    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    //通过创建a标签实现
-    let link = document.createElement("a");
-    link.href = uri;
-    //对下载的文件命名
-    link.download = "上海市口罩销售区域统计表(" + date + ").csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    let head = ['市辖区','指定药店数量','上报药店数量','上报比例','上报药店配额','上报药店进货量','昨日售后结余','损耗量','上报药店售出量','售出比例','当前库存'];
+    let keys = ['district','pharmacy','reported','reported_proportion','quota','purchased','yesterday','loss','sale','sale_proportion','inventory']
+    // 分割出比例
+    jsonData.forEach(item=>{
+      item['reported_proportion'] = item['reported'].replace(" ", "").split('(')[1].replace(')','');
+      item['reported'] = item['reported'].replace(" ", "").split('(')[0];
+      item['sale_proportion'] = item['sale'].replace(" ", "").split('(')[1].replace(')','');
+      item['sale'] = item['sale'].replace(" ", "").split('(')[0];
+    })
+    const title = "上海市口罩销售区域统计表(" + date + ")";
+    json2excel(jsonData,head,keys,title);
   }
 
   export default {

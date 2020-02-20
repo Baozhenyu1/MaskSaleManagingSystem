@@ -105,27 +105,14 @@
   import { getStreetDistrictList } from '../../api/manage'
   import Vue from 'vue'
   import { USERNAME } from '@/store/mutation-types'
+  import json2excel from '@/utils/json2excel';
 
   function table2excel(jsonData, tips) {
     //要导出的json数据
-    let str = '市辖区,街道编号,街道名,居委会数量,今日预约登记户数,修改时间\n';
-    for (let i = 0; i < jsonData.length; i++) {
-      for (let item in jsonData[i]) {
-        let new_str = String(jsonData[i][item]).replace(/,/g, '、')
-        str += `${new_str},`;
-      }
-      str += '\n';
-    }
-    //encodeURIComponent解决中文乱码
-    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    //通过创建a标签实现
-    let link = document.createElement("a");
-    link.href = uri;
-    //对下载的文件命名
-    link.download = "街道填报信息表(" + tips+ ").csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    let head = ['市辖区','街道编号','街道名','居委会数量','今日预约登记户数','修改时间'];
+    let keys = ['district','id','name','com_num','appointed','m_time']
+    const title = "街道填报信息表(" + tips+ ")";
+    json2excel(jsonData,head,keys,title);
   }
 
 
@@ -233,8 +220,6 @@
           obj.pushList(data["data"],para.reported)
           obj.loading = false
         })
-        console.log(para['date'])
-        console.log(this.queryDate)
         if(para['date'] === this.queryDate){
           return;
         }

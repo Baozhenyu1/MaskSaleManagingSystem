@@ -106,6 +106,7 @@
   import {getAnalysisList} from '@/api/manage'
   import { USERNAME } from '@/store/mutation-types'
   import Vue from 'vue'
+  import json2excel from '@/utils/json2excel';
 
   const statusMap = {
     0: {
@@ -128,10 +129,9 @@
 
   function table2excel(jsonData, tips) {
     //要导出的json数据
-    let str = 'ID,市辖区,药店名,药店地址,联系人,联系电话,配额,进货量,昨日结余,已售数量,损耗量,剩余库存量,进货状态（进货量与配额相差20以内算正常）,修改时间\n';
+    let head = ['ID','市辖区','药店名','药店地址','联系人','联系电话','配额','进货量','昨日结余','已售数量','损耗量','剩余库存量','进货状态（进货量与配额相差20以内算正常）','修改时间']
     let keys = ['phar_id','district','phar_name','phar_addr','phar_con_per','phar_con_tel','phar_quota','phar_data_purchased','remain',
       'phar_data_issued','loss','phar_data_balance','status','phar_data_phar_date'];
-    let value;
     jsonData.forEach(item=>{
       item['status'] = '正常'
       if(item['phar_data_purchased'] === '未上报'){
@@ -143,22 +143,10 @@
           item['status'] = '偏多'
         }
       }
-      keys.forEach(key=>{
-        value = String(item[key]).replace(/,/g, '、')
-        str += `${value},`;
-      })
-      str += '\n';
     })
-    //encodeURIComponent解决中文乱码
-    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    //通过创建a标签实现
-    let link = document.createElement("a");
-    link.href = uri;
     //对下载的文件命名
-    link.download = "药店信息填报表(" + tips+ ").csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const title = "药店填报信息表(" + tips+ ")";
+    json2excel(jsonData,head,keys,title)
   }
 
   export default {

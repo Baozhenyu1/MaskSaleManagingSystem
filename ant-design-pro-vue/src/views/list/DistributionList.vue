@@ -92,27 +92,14 @@
   import {PageView} from '@/layouts'
   import Vue from 'vue'
   import { USERNAME } from '@/store/mutation-types'
+  import json2excel from '@/utils/json2excel';
 
   function table2excel(jsonData, substr) {
     //要导出的json数据
-    let str = 'ID,市辖区,公司,药房名称,药房地址,联系人,联系电话,药店配额\n';
-    for (let i = 0; i < jsonData.length; i++) {
-      for (let item in jsonData[i]) {
-        let new_str = String(jsonData[i][item]).replace(/,/g, '、')
-        str += `${new_str},`;
-      }
-      str += '\n';
-    }
-    //encodeURIComponent解决中文乱码
-    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    //通过创建a标签实现
-    let link = document.createElement("a");
-    link.href = uri;
-    //对下载的文件命名
-    link.download = "药店分发表(" + substr + ").csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    let head = ['ID','市辖区','公司','药房名称','药房地址','联系人','联系电话','药店配额'];
+    let keys = ['id','district','company','name','address','con_per','tel','quota'];
+    const title = "药店分发表(" + substr + ")";
+    json2excel(jsonData,head,keys,title);
   }
 
   export default {

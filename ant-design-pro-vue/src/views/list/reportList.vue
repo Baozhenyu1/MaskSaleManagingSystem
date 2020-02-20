@@ -21,31 +21,18 @@
 <script>
   import {getDeliveryList} from '@/api/manage'
   import {PageView} from '@/layouts'
-
-  function sortQuota(a,b){
-    return b.quota - a.quota;
-  }
+  import json2excel from '@/utils/json2excel';
 
   function table2excel(jsonData) {
     //要导出的json数据
-    let temp = '{enterprise},{quota}\n';
-    let str = '配送企业,配额,门店数量\n';
-    for(let i = 0 ; i < jsonData.length ; i++ ){
-      for(let item in jsonData[i]){
-        str+=`${jsonData[i][item]},`;
-      }
-      str+='\n';
-    }
-    //encodeURIComponent解决中文乱码
-    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    //通过创建a标签实现
-    let link = document.createElement("a");
-    link.href = uri;
-    //对下载的文件命名
-    link.download =  "配送企业提货表.csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    let head = ['配送企业','配额','门店数量'];
+    let keys = ['enterprise','quota','count'];
+    const title = "配送企业提货表";
+    json2excel(jsonData,head,keys,title);
+  }
+
+  function sortQuota(a,b){
+    return b.quota - a.quota;
   }
 
   export default {
@@ -56,9 +43,9 @@
     data() {
       return {
         columns: [
-          { key: 1, title: '配送企业', dataIndex: 'enterprise', className: 'table-header', width: '100px', className: 'table-header' },
-          { key: 2, title: '配额', dataIndex: 'quota', className: 'table-header', width: '80px', className: 'table-header' },
-          { key: 3, title: '门店数量', dataIndex: 'count', className: 'table-header', width: '80px', className: 'table-header'}
+          { key: 1, title: '配送企业', dataIndex: 'enterprise', className: 'table-header', width: '100px'},
+          { key: 2, title: '配额', dataIndex: 'quota', className: 'table-header', width: '80px' },
+          { key: 3, title: '门店数量', dataIndex: 'count', className: 'table-header', width: '80px'}
         ],
         data: [],
         loading: false,

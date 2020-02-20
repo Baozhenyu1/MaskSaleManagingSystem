@@ -11,6 +11,13 @@ const api = {
   //预约销售统计表
   sellReserveList: '/mask/api-backend/sellReserveTable/',
 
+  // 修改基础信息
+  editStoreBasicInfo: '/mask/api-backend/editStoreBasicInfo/',
+
+  // 修改历史数据
+  editStoreHistory: '/mask/api-backend/editStoreDaysData/',
+
+
   deliveryList: '/mask/api-backend/deliveryTable/?format=json',
   quotaLIst: '/mask/api-backend/quotaTable/?format=json',
   lineChart: '/mask/api-backend/sellLineChart/?format=json',
@@ -156,6 +163,23 @@ export function getSellReserveList (parameter) {
   })
 }
 
+export function editStoreBasicInfo (data) {
+  return axios({
+    url: api.editStoreBasicInfo,
+    method: 'post',
+    data: JSON.stringify(data),
+    dataType:'json'
+  })
+}
+
+export function editStoreDaysData (data) {
+  return axios({
+    url: api.editStoreHistory,
+    method: 'post',
+    data: JSON.stringify(data),
+    dataType:'json'
+  })
+}
 
 export function getWordCloud () {
   return axios({

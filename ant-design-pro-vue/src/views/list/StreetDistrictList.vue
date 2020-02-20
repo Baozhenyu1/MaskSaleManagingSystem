@@ -68,30 +68,14 @@
   import moment from 'moment'
   import { USERNAME } from '@/store/mutation-types'
   import Vue from 'vue'
+  import json2excel from '@/utils/json2excel';
 
   function table2excel(jsonData, date) {
     //要导出的json数据
-    let str = '市辖区,指定街道数量,上报街道数量,上报比例,上报街道今日预约量,上报街道累计预约量,统计日期\n';
+    let head = ['市辖区','指定街道数量','上报街道数量','上报比例','上报街道今日预约量','上报街道累计预约量','统计日期'];
     let keys = ['district','street_num','report_num','report_proportion','today_r','total_r','date'];
-    let value;
-    console.log(jsonData);
-    jsonData.forEach(item =>{
-      keys.forEach(key=>{
-        value = String(item[key]).replace(/,/g, '、')
-        str += `${value},`;
-      })
-      str += '\t\n';
-    })
-    //encodeURIComponent解决中文乱码
-    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    //通过创建a标签实现
-    let link = document.createElement("a");
-    link.href = uri;
-    //对下载的文件命名
-    link.download = "上海市口罩预约区域统计表(" + date + ").csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const title = "上海市口罩预约区域统计表(" + date + ")";
+    json2excel(jsonData,head,keys,title);
   }
 
   export default {
