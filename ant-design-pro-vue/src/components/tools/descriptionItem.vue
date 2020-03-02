@@ -14,13 +14,13 @@
 </template>
 
 <script>
-  export default {
-    name: "descriptionItem",
-    props: {
-      title: String,
-      content: String,
-    },
+export default {
+  name: 'DescriptionItem',
+  props: {
+    title: String,
+    content: String
   }
+}
 </script>
 
 <style scoped>

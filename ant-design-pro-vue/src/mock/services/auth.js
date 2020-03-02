@@ -10,7 +10,7 @@ const login = (options) => {
     return builder({ isLogin: true }, '账户或密码错误', 401)
   }
   return builder({
-    'result':2
+    'result': 2
   })
   // return builder({
   //   'id': Mock.mock('@guid'),

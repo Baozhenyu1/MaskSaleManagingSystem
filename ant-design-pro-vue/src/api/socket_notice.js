@@ -1,13 +1,13 @@
-import user from "@/store/modules/user.js"
+import user from '@/store/modules/user.js'
 
 let websock = null
 let globalCallback = null
 let tmpMsg = []
 
 // 初始化weosocket
-function initWebSocket() {
+function initWebSocket () {
   // ws地址 -->这里是你的请求路径
-  let ws = 'ws://111.229.63.2:4567/w_message'
+  const ws = 'ws://111.229.63.2:4567/w_message'
 
   if (user.state.token) {
     websock = new WebSocket(ws)
@@ -33,8 +33,7 @@ function initWebSocket() {
 }
 
 // 实际调用的方法
-function sendSock(agentData, callback) {
-
+function sendSock (agentData, callback) {
   if (websock) {
     globalCallback = callback
     if (websock.readyState === websock.OPEN) {
@@ -56,15 +55,13 @@ function sendSock(agentData, callback) {
       sendSock(agentData, callback)
     }, 100)
   }
-
-
 }
 
 // 数据接收
-function websocketonmessage(e) {
+function websocketonmessage (e) {
   if (globalCallback) {
     if (tmpMsg.length != 0) {
-      for (let i in tmpMsg) {
+      for (const i in tmpMsg) {
         globalCallback(tmpMsg[i])
       }
       tmpMsg = []
@@ -76,19 +73,18 @@ function websocketonmessage(e) {
 }
 
 // 数据发送
-function websocketsend(agentData) {
+function websocketsend (agentData) {
   websock.send(agentData)
 }
 
 // 关闭
-function websocketclose(e) {
+function websocketclose (e) {
 }
 
 // 创建 websocket 连接
-function websocketOpen(e) {
-  websocketsend("TO/" + user.state.token)
+function websocketOpen (e) {
+  websocketsend('TO/' + user.state.token)
 }
-
 
 // 将方法暴露出去
 export {

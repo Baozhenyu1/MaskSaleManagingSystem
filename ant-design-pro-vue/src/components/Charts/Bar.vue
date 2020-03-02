@@ -21,7 +21,6 @@
 
 <script>
 
-
 const tooltip = [
   'x*y',
   (x, y) => ({
@@ -43,7 +42,7 @@ const scale = [{
 export default {
   name: 'Bar',
   props: {
-    show_data: Array,
+    showData: Array,
     title: {
       type: String,
       default: ''

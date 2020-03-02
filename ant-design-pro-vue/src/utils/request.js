@@ -14,7 +14,7 @@ import user from '@/store/modules/user.js'
 // 创建 axios 实例
 const service = axios.create({
   baseURL: '/api', // api base_url
-  timeout: 10000 // 请求超时时间
+  timeout: 600 * 1000 // 请求超时时间
 })
 
 const err = (error) => {

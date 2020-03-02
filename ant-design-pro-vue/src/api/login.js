@@ -21,8 +21,6 @@ export function login (parameter) {
   })
 }
 
-
-
 export function getInfo () {
   return axios({
     url: api.UserInfo,

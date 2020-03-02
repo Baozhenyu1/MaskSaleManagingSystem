@@ -67,7 +67,6 @@ function sendSock(agentData, callback) {
     }, 100)
   }
 
-
 }
 
 // 数据接收
@@ -106,4 +105,4 @@ initWebSocket()
 // 将方法暴露出去
 export {
   sendSock
-}*/
+} */

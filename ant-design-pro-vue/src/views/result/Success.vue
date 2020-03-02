@@ -32,12 +32,12 @@ export default {
     }
   },
   methods: {
-    more() {
+    more () {
       this.$router.push({
         path: '/userService/base-form'
       })
     },
-    feedback() {
+    feedback () {
       this.$router.push({
         path: '/userService/feedback'
       })

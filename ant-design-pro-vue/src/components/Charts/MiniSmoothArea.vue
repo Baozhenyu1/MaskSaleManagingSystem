@@ -1,9 +1,4 @@
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,18 +11,12 @@
   <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com">
   <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/">
 
-
-
   <link crossorigin="anonymous" media="all" integrity="sha512-67V2J9Se2CifJlftk9/cExHGvxd7N9b9EdGnQEpszu99Ogeecilu9jIDxoCkx3zNLfB9ArraXW0J03qyVmN0Uw==" rel="stylesheet" href="https://github.githubassets.com/assets/frameworks-e7318add1f7e055d040edb0f75aaa0ba.css" />
-  
+
     <link crossorigin="anonymous" media="all" integrity="sha512-m3Ej6i/Pcrccby7PC+1McGjyuF9icy/BSv8IAj6kU0sgVl3Pf6ZIBwb01ST1x2Rb+q5z5trV9y2W8woD58qK0A==" rel="stylesheet" href="https://github.githubassets.com/assets/github-f4279344f797f282848193392bae6f6f.css" />
-    
-    
-    
-    
 
   <meta name="viewport" content="width=device-width">
-  
+
   <title>ant-design-pro-vue/MiniSmoothArea.vue at master · sendya/ant-design-pro-vue</title>
     <meta name="description" content="👨🏻‍💻👩🏻‍💻 Use Ant Design Vue like a Pro!     A simple vue admin template. - sendya/ant-design-pro-vue">
     <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
@@ -43,9 +32,6 @@
   <link rel="sudo-modal" href="/sessions/sudo_modal">
   <meta name="request-id" content="D5E7:6D7D:1615F36:1F0848D:5D230BAC" data-pjax-transient>
 
-
-  
-
   <meta name="selected-link" value="repo_source" data-pjax-transient>
 
       <meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
@@ -55,17 +41,11 @@
   <meta name="octolytics-host" content="collector.githubapp.com" /><meta name="octolytics-app-id" content="github" /><meta name="octolytics-event-url" content="https://collector.githubapp.com/github-external/browser_event" /><meta name="octolytics-dimension-request_id" content="D5E7:6D7D:1615F36:1F0848D:5D230BAC" /><meta name="octolytics-dimension-region_edge" content="ap-southeast-1" /><meta name="octolytics-dimension-region_render" content="iad" /><meta name="octolytics-actor-id" content="44332841" /><meta name="octolytics-actor-login" content="Baozhenyu1" /><meta name="octolytics-actor-hash" content="6fb1eff43c6e5f1f116f1d293c891319ec324ab43a77e9eeff8f6f2ea0e3f519" />
 <meta name="analytics-location" content="/&lt;user-name&gt;/&lt;repo-name&gt;/blob/show" data-pjax-transient="true" />
 
-
-
     <meta name="google-analytics" content="UA-3769691-2">
 
   <meta class="js-ga-set" name="userId" content="b60db27d552970f62c7561b9abec73ac">
 
 <meta class="js-ga-set" name="dimension1" content="Logged In">
-
-
-
-  
 
       <meta name="hostname" content="github.com">
     <meta name="user-login" content="Baozhenyu1">
@@ -78,7 +58,6 @@
   <meta name="html-safe-nonce" content="f3d56cd9a3f69a923963db86850c53cbbc1135c2">
 
   <meta http-equiv="x-pjax-version" content="41b9ff63b8f4ee38c8cca1ecdadf550e">
-  
 
       <link href="https://github.com/sendya/ant-design-pro-vue/commits/master.atom" rel="alternate" title="Recent Commits to ant-design-pro-vue:master" type="application/atom+xml">
 
@@ -86,9 +65,7 @@
 
   <meta name="octolytics-dimension-user_id" content="5404542" /><meta name="octolytics-dimension-user_login" content="sendya" /><meta name="octolytics-dimension-repository_id" content="148892884" /><meta name="octolytics-dimension-repository_nwo" content="sendya/ant-design-pro-vue" /><meta name="octolytics-dimension-repository_public" content="true" /><meta name="octolytics-dimension-repository_is_fork" content="false" /><meta name="octolytics-dimension-repository_network_root_id" content="148892884" /><meta name="octolytics-dimension-repository_network_root_nwo" content="sendya/ant-design-pro-vue" /><meta name="octolytics-dimension-repository_explore_github_marketplace_ci_cta_shown" content="false" />
 
-
     <link rel="canonical" href="https://github.com/sendya/ant-design-pro-vue/blob/master/src/components/Charts/MiniSmoothArea.vue" data-pjax-transient>
-
 
   <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
 
@@ -99,26 +76,17 @@
 
 <meta name="theme-color" content="#1e2327">
 
-
   <meta name="u2f-enabled" content="true">
-
-
 
   <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials">
 
   </head>
 
   <body class="logged-in env-production page-responsive page-blob">
-    
 
   <div class="position-relative js-header-wrapper ">
     <a href="#start-of-content" tabindex="1" class="p-3 bg-blue text-white show-on-focus js-skip-to-content">Skip to content</a>
     <div id="js-pjax-loader-bar" class="pjax-loader-bar"><div class="progress"></div></div>
-
-    
-    
-    
-
 
           <header class="Header js-details-container Details flex-wrap flex-lg-nowrap p-responsive" role="banner">
 
@@ -166,9 +134,8 @@
             <img src="https://github.githubassets.com/images/search-key-slash.svg" alt="" class="mr-2 header-search-key-slash">
 
             <div class="Box position-absolute overflow-hidden d-none jump-to-suggestions js-jump-to-suggestions-container">
-              
+
 <ul class="d-none js-jump-to-suggestions-template-container">
-  
 
 <li class="d-flex flex-justify-start flex-items-center p-0 f5 navigation-item js-navigation-item js-jump-to-suggestion" role="option">
   <a tabindex="-1" class="no-underline d-flex flex-auto flex-items-center jump-to-suggestions-path js-jump-to-suggestion-path js-navigation-open p-2" href="">
@@ -209,7 +176,6 @@
 </ul>
 
 <ul id="jump-to-results" role="listbox" class="p-0 m-0 js-navigation-container jump-to-suggestions-results-container js-jump-to-suggestions-results-container">
-  
 
 <li class="d-flex flex-justify-start flex-items-center p-0 f5 navigation-item js-navigation-item js-jump-to-scoped-search d-none" role="option">
   <a tabindex="-1" class="no-underline d-flex flex-auto flex-items-center jump-to-suggestions-path js-jump-to-suggestion-path js-navigation-open p-2" href="">
@@ -241,8 +207,6 @@
   </a>
 </li>
 
-  
-
 <li class="d-flex flex-justify-start flex-items-center p-0 f5 navigation-item js-navigation-item js-jump-to-global-search d-none" role="option">
   <a tabindex="-1" class="no-underline d-flex flex-auto flex-items-center jump-to-suggestions-path js-jump-to-suggestion-path js-navigation-open p-2" href="">
     <div class="jump-to-octicon js-jump-to-octicon flex-shrink-0 mr-2 text-center d-none">
@@ -273,7 +237,6 @@
   </a>
 </li>
 
-
     <li class="d-flex flex-justify-center flex-items-center p-0 f5 js-jump-to-suggestion">
       <img src="https://github.githubassets.com/images/spinners/octocat-spinner-128.gif" alt="Octocat Spinner Icon" class="m-2" width="28">
     </li>
@@ -283,7 +246,6 @@
       </label>
 </form>  </div>
 </div>
-
 
       <nav class="d-flex flex-column flex-lg-row flex-self-stretch flex-lg-self-auto" aria-label="Global">
     <a class="Header-link d-block d-lg-none py-2 py-lg-0 border-top border-lg-top-0 border-white-fade-15" data-ga-click="Header, click, Nav menu - item:dashboard:user" aria-label="Dashboard" href="/dashboard">
@@ -298,7 +260,7 @@
     <div class="mr-0 mr-lg-3 py-2 py-lg-0 border-top border-lg-top-0 border-white-fade-15">
       <a class="js-selected-navigation-item Header-link" data-ga-click="Header, click, Nav menu - item:marketplace context:user" data-octo-click="marketplace_click" data-octo-dimensions="location:nav_bar" data-selected-links=" /marketplace" href="/marketplace">
         Marketplace
-</a>      
+</a>
     </div>
 
   <a class="js-selected-navigation-item Header-link  mr-0 mr-lg-3 py-2 py-lg-0 border-top border-lg-top-0 border-white-fade-15" data-ga-click="Header, click, Nav menu - item:explore" data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore" href="/explore">
@@ -329,19 +291,16 @@
     </div>
 
     <div class="Header-item position-relative d-none d-lg-flex">
-      
 
     </div>
 
     <div class="Header-item mr-0 mr-lg-3 flex-order-1 flex-lg-order-none">
-      
 
     <a aria-label="You have no unread notifications" class="Header-link notification-indicator position-relative tooltipped tooltipped-s js-socket-channel js-notification-indicator" data-hotkey="g n" data-ga-click="Header, go to notifications, icon:read" data-channel="notification-changed:44332841" href="/notifications">
         <span class="mail-status "></span>
         <svg class="octicon octicon-bell" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M14 12v1H0v-1l.73-.58c.77-.77.81-2.55 1.19-4.42C2.69 3.23 6 2 6 2c0-.55.45-1 1-1s1 .45 1 1c0 0 3.39 1.23 4.16 5 .38 1.88.42 3.66 1.19 4.42l.66.58H14zm-7 4c1.11 0 2-.89 2-2H5c0 1.11.89 2 2 2z"/></svg>
 </a>
     </div>
-
 
     <div class="Header-item position-relative d-none d-lg-flex">
       <details class="details-overlay details-reset">
@@ -351,7 +310,7 @@
     <svg class="octicon octicon-plus" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M12 9H7v5H5V9H0V7h5V2h2v5h5v2z"/></svg> <span class="dropdown-caret"></span>
   </summary>
   <details-menu class="dropdown-menu dropdown-menu-sw">
-    
+
 <a role="menuitem" class="dropdown-item" href="/new" data-ga-click="Header, create new repository">
   New repository
 </a>
@@ -368,7 +327,6 @@
     New organization
   </a>
 
-
   <div role="none" class="dropdown-divider"></div>
   <div class="dropdown-header">
     <span title="sendya/ant-design-pro-vue">This repository</span>
@@ -377,14 +335,13 @@
       New issue
     </a>
 
-
   </details-menu>
 </details>
 
     </div>
 
     <div class="Header-item position-relative mr-0 d-none d-lg-flex">
-      
+
 <details class="details-overlay details-reset">
   <summary class="Header-link"
     aria-label="View profile and more"
@@ -397,7 +354,7 @@
     <div role="none" class="dropdown-divider"></div>
 
       <div class="pl-3 pr-3 f6 user-status-container js-user-status-context pb-1" data-url="/users/status?compact=1&amp;link_mentions=0&amp;truncate=1">
-        
+
 <div class="js-user-status-container
     user-status-compact rounded-1 px-2 py-1 mt-2
     border
@@ -418,9 +375,8 @@
         </div>
         <div class="
           d-inline-block v-align-middle
-          
-          
-           css-truncate css-truncate-target 
+
+           css-truncate css-truncate-target
            user-status-message-wrapper f6"
            style="line-height: 20px;" >
           <div class="d-inline-block text-gray-dark v-align-text-top text-left">
@@ -525,7 +481,6 @@
               </div>
             </div>
           </div>
-            
 
 <div class="d-inline-block f5 mr-2 pt-3 pb-2" >
   <div class="d-inline-block mr-1">
@@ -595,7 +550,6 @@
       </div>
       <div role="none" class="dropdown-divider"></div>
 
-
     <a role="menuitem" class="dropdown-item" href="/Baozhenyu1" data-ga-click="Header, go to profile, text:your profile">Your profile</a>
     <a role="menuitem" class="dropdown-item" href="/Baozhenyu1?tab=repositories" data-ga-click="Header, go to repositories, text:your repositories">Your repositories</a>
 
@@ -604,12 +558,11 @@
     <a role="menuitem" class="dropdown-item" href="/Baozhenyu1?tab=stars" data-ga-click="Header, go to starred repos, text:your stars">Your stars</a>
       <a role="menuitem" class="dropdown-item" href="https://gist.github.com/mine" data-ga-click="Header, your gists, text:your gists">Your gists</a>
 
-
     <div role="none" class="dropdown-divider"></div>
     <a role="menuitem" class="dropdown-item" href="https://help.github.com" data-ga-click="Header, go to help, text:help">Help</a>
     <a role="menuitem" class="dropdown-item" href="/settings/profile" data-ga-click="Header, go to settings, icon:settings">Settings</a>
     <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="logout-form" action="/logout" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="GgR5KfkkpyvgiWt5rnEKkOoX/SRTbLV7WBvYbr7+sB+PWvk1Z/PE6CY9IYfTVIw038C/aVBAvfeiEq2GW/3qIw==" />
-      
+
       <button type="submit" class="dropdown-item dropdown-signout" data-ga-click="Header, sign out, icon:logout" role="menuitem">
         Sign out
       </button>
@@ -620,44 +573,25 @@
 
   </header>
 
-      
-
   </div>
 
   <div id="start-of-content" class="show-on-focus"></div>
-
 
     <div id="js-flash-container">
 
 </div>
 
-
-
   <div class="application-main " data-commit-hovercards-enabled>
         <div itemscope itemtype="http://schema.org/SoftwareSourceCode" class="">
     <main  >
-      
-
-
-  
-
-
-
-
-
-
-
 
   <div class="pagehead repohead instapaper_ignore readability-menu experiment-repo-nav pt-0 pt-lg-4 ">
     <div class="repohead-details-container clearfix container-lg p-responsive d-none d-lg-block">
 
       <ul class="pagehead-actions">
 
-
-
-
   <li>
-    
+
     <!-- '"` --><!-- </textarea></xmp> --></option></form><form data-remote="true" class="clearfix js-social-form js-social-container" action="/notifications/subscribe" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="2HOtPeNzFu14zyzDJDmr3VtyySo+SgU50+mWM0ST+EPw8I2EvBVZCkbgX8eqzmV8d3YGgxOHASulu043wgCS9Q==" />      <input type="hidden" name="repository_id" value="148892884">
 
       <details class="details-reset details-overlay select-menu float-left">
@@ -770,12 +704,11 @@
   <span class="author" itemprop="author"><a class="url fn" rel="author" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=5404542" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/sendya">sendya</a></span><!--
 --><span class="path-divider">/</span><!--
 --><strong itemprop="name"><a data-pjax="#js-repo-pjax-container" href="/sendya/ant-design-pro-vue">ant-design-pro-vue</a></strong>
-  
 
 </h1>
 
     </div>
-    
+
 <nav class="hx_reponav reponav js-repo-nav js-sidenav-container-pjax container-lg p-responsive d-none d-lg-block"
      itemscope
      itemtype="http://schema.org/BreadcrumbList"
@@ -804,7 +737,6 @@
       <span class="Counter">1</span>
       <meta itemprop="position" content="3">
 </a>  </span>
-
 
     <a data-hotkey="g b" class="js-selected-navigation-item reponav-item" data-selected-links="repo_projects new_repo_project repo_project /sendya/ant-design-pro-vue/projects" href="/sendya/ant-design-pro-vue/projects">
       <svg class="octicon octicon-project" viewBox="0 0 15 16" version="1.1" width="15" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M10 12h3V2h-3v10zm-4-2h3V2H6v8zm-4 4h3V2H2v12zm-1 1h13V1H1v14zM14 0H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1z"/></svg>
@@ -880,28 +812,21 @@
   </nav>
 </div>
 
-
   </div>
 <div class="container-lg new-discussion-timeline experiment-repo-nav  p-responsive">
   <div class="repository-content ">
 
-    
-    
-
-
-  
     <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/sendya/ant-design-pro-vue/blob/1ab3d6813b7cfe2aa5c68aa31a2d8e9e5aeec202/src/components/Charts/MiniSmoothArea.vue">Permalink</a>
 
     <!-- blob contrib key: blob_contributors:v21:6857b66ae409f4e442899647a206874b -->
-      
 
     <div class="d-flex flex-items-start flex-shrink-0 mb-2 flex-column flex-md-row">
       <span class="d-flex flex-justify-between width-full width-md-auto">
-        
+
 <details class="details-reset details-overlay select-menu branch-select-menu  hx_rsm" id="branch-select-menu">
   <summary class="btn btn-sm select-menu-button css-truncate"
            data-hotkey="w"
-           
+
            title="Switch branches or tags">
     <i>Branch:</i>
     <span class="css-truncate-target">master</span>
@@ -943,9 +868,6 @@
       </div>
     </div>
 
-
-
-    
   <div class="Box Box--condensed d-flex flex-column flex-shrink-0">
       <div class="Box-body d-flex flex-justify-between bg-blue-light flex-column flex-md-row flex-items-start flex-md-items-center">
         <span class="pr-md-4 f6">
@@ -984,12 +906,8 @@
     </div>
   </div>
 
-
-
-
-
     <div class="Box mt-3 position-relative">
-      
+
 <div class="Box-header py-2 d-flex flex-column flex-shrink-0 flex-md-row flex-md-items-center">
 
   <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
@@ -1005,7 +923,6 @@
         <a class="btn btn-sm js-update-url-with-hash BtnGroup-item" data-hotkey="b" href="/sendya/ant-design-pro-vue/blame/master/src/components/Charts/MiniSmoothArea.vue">Blame</a>
       <a rel="nofollow" class="btn btn-sm BtnGroup-item" href="/sendya/ant-design-pro-vue/commits/master/src/components/Charts/MiniSmoothArea.vue">History</a>
     </div>
-
 
     <div>
             <a class="btn-octicon tooltipped tooltipped-nw hide-sm"
@@ -1030,13 +947,8 @@
   </div>
 </div>
 
-
-
-
-      
-
   <div itemprop="text" class="Box-body p-0 blob-wrapper data type-vue ">
-      
+
 <table class="highlight tab-size js-file-line-container" data-tab-size="2">
       <tr>
         <td id="L1" class="blob-num js-line-number" data-line-number="1"></td>
@@ -1220,8 +1132,6 @@
 
     </div>
 
-  
-
   <details class="details-reset details-overlay details-overlay-dark">
     <summary data-hotkey="l" aria-label="Jump to line"></summary>
     <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast linejump" aria-label="Jump to line">
@@ -1231,19 +1141,15 @@
 </form>    </details-dialog>
   </details>
 
-
-
   </div>
   <div class="modal-backdrop js-touch-events"></div>
 </div>
 
     </main>
   </div>
-  
 
   </div>
 
-        
 <div class="footer container-lg width-full p-responsive" role="contentinfo">
   <div class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
     <ul class="list-style-none d-flex flex-wrap col-12 col-lg-5 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
@@ -1273,8 +1179,6 @@
   </div>
 </div>
 
-
-
   <div id="ajax-error-message" class="ajax-error-message flash flash-error">
     <svg class="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"/></svg>
     <button type="button" class="flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
@@ -1283,14 +1187,10 @@
     You can’t perform that action at this time.
   </div>
 
-
-    
     <script crossorigin="anonymous" integrity="sha512-mxKcLKe1PSS00TpWBTYMDM5u/3N8fjH9TViQqKljWBkiZs0e3hXU4gTaJjqaopJliYDhnsgZKVwkbEuvbEX9TQ==" type="application/javascript" src="https://github.githubassets.com/assets/frameworks-96c669c6.js"></script>
-    
+
     <script crossorigin="anonymous" async="async" integrity="sha512-fGWKs1xKCBTTpsgg5C4/axMQGijlMBYE9papaEJGRY45RpgFihkhiUIATw2+C3aVJZ3wyeXz6MNSP9Eh4y+tOw==" type="application/javascript" src="https://github.githubassets.com/assets/github-bootstrap-4652d74a.js"></script>
-    
-    
-    
+
   <div class="js-stale-session-flash stale-session-flash flash flash-warn flash-banner" hidden
     >
     <svg class="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"/></svg>
@@ -1318,4 +1218,3 @@
 
   </body>
 </html>
-

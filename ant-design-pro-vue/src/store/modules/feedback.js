@@ -26,16 +26,15 @@ const feedback = {
   },
 
   actions: {
-    Store({commit}, data) {
+    Store ({ commit }, data) {
       console.log(data)
       commit('SET_TITLE', data.title)
       commit('SET_COMPANY', data.company)
       commit('SET_DRUG', data.drug)
       commit('SET_DETAIL', data.detail)
       commit('SET_UPDATED', true)
-      console.log("feedback", feedback)
+      console.log('feedback', feedback)
     }
-
 
   }
 }

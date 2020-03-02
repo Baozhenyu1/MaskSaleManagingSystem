@@ -44,7 +44,7 @@
 <script>
 import NoticeIcon from '@/components/NoticeIcon'
 import { mapActions, mapGetters } from 'vuex'
-import HeaderNotice from "../NoticeIcon/NoticeIcon";
+import HeaderNotice from '../NoticeIcon/NoticeIcon'
 
 export default {
   name: 'UserMenu',
@@ -77,4 +77,3 @@ export default {
   }
 }
 </script>
-

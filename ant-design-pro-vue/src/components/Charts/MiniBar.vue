@@ -1,7 +1,7 @@
 <template>
   <div class="antv-chart-mini">
     <div class="chart-wrapper" :style="{ height: 46 }">
-      <v-chart :force-fit="true" :height="height" :data="show_data" :padding="[36, 5, 18, 5]">
+      <v-chart :force-fit="true" :height="height" :data="barData" :padding="[36, 5, 18, 5]">
         <v-tooltip />
         <v-bar position="x*y" />
       </v-chart>
@@ -39,7 +39,7 @@ export default {
     }
   },
   props: {
-    show_data: Array
+    barData: Array
   }
 }
 </script>

@@ -14,8 +14,8 @@ import {
   DEFAULT_MULTI_TAB
 } from '@/store/mutation-types'
 import config from '@/config/defaultSettings'
-import {USERNAME} from "../store/mutation-types";
-import {welcome} from '@/utils/util'
+import { USERNAME } from '../store/mutation-types'
+import { welcome } from '@/utils/util'
 
 export default function Initializer () {
   store.commit('SET_SIDEBAR_TYPE', Vue.ls.get(SIDEBAR_TYPE, true))
@@ -29,7 +29,7 @@ export default function Initializer () {
   store.commit('TOGGLE_COLOR', Vue.ls.get(DEFAULT_COLOR, config.primaryColor))
   store.commit('TOGGLE_MULTI_TAB', Vue.ls.get(DEFAULT_MULTI_TAB, config.multiTab))
   store.commit('SET_TOKEN', Vue.ls.get(ACCESS_TOKEN))
-  store.commit('SET_NAME', {name: Vue.ls.get(USERNAME), welcome: welcome()})
+  store.commit('SET_NAME', { name: Vue.ls.get(USERNAME), welcome: welcome() })
 
   // last step
 }

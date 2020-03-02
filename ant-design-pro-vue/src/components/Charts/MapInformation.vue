@@ -20,8 +20,8 @@ export default {
       para: '',
       rawData: [],
       firstMap: true,
-      para_url: "",
-      dateRange: "",
+      para_url: '',
+      dateRange: ''
     }
   },
   props: {
@@ -44,7 +44,7 @@ export default {
       getMapGeo().then(function (datas) {
         const usaJson = datas
 
-        console.log("mapGeo:", usaJson)
+        console.log('mapGeo:', usaJson)
 
         obj.myChart.hideLoading()
         echarts.registerMap('Shanghai', usaJson, {})
@@ -99,24 +99,22 @@ export default {
           ]
         }
         obj.myChart.setOption(obj.option)
-        //console.log(obj.option)
+        // console.log(obj.option)
         obj.myChart.on('click', function (params) {
           const len1 = ('0' + obj.date.split('|')[0].substring(4)).length
           const len2 = ('0' + (parseInt(obj.date.split('|')[1].substring(4)) + 1)).length
-
 
           const startdate = obj.date.split('|')[0].substring(0, 4) + '-' + ('0' + obj.date.split('|')[0].substring(4)).substring(len1 - 2) + '-01'
 
           const enddate = obj.date.split('|')[1].substring(0, 4) + '-' + ('0' + (parseInt(obj.date.split('|')[1].substring(4)) + 1)).substring(len2 - 2) + '-01'
           obj.$router.push({
-            path: '/table-list?province_name=' + params.name + '&start_date=' + startdate + '&end_date=' + enddate + obj.para_url + "&category_=短缺药相关"
+            path: '/table-list?province_name=' + params.name + '&start_date=' + startdate + '&end_date=' + enddate + obj.para_url + '&category_=短缺药相关'
           })
         })
-
       })
     },
     handleReportData (datas, date) {
-      //console.log("handleReportData dispatched")
+      // console.log("handleReportData dispatched")
       const start = parseInt(date.split('|')[0])
       const end = parseInt(date.split('|')[1])
       const temp = []
@@ -131,17 +129,14 @@ export default {
           }
         }
       }
-      //console.log(temp)
-      let result = []
+      // console.log(temp)
+      const result = []
       Object.assign(result, mapTem)
-      //console.log(mapTem)
+      // console.log(mapTem)
       result.forEach(item => {
-        if (item["name"] in temp)
-          item['value'] = temp[item['name']]
-        else
-          item['value'] = 0
+        if (item['name'] in temp) { item['value'] = temp[item['name']] } else { item['value'] = 0 }
       })
-      //console.log(result)
+      // console.log(result)
       return result
     },
     getMax (report) {
@@ -162,16 +157,16 @@ export default {
       }
       return min
     },
-    drawNewMap(data, date) {
+    drawNewMap (data, date) {
       const reports = this.handleReportData(data, date)
       const max = this.getMax(reports)
       const min = this.getMin(reports)
 
-      //console.log(reports)
+      // console.log(reports)
 
-      //console.log(this.option)
+      // console.log(this.option)
       this.myChart.setOption({
-        title:{
+        title: {
           text: this.dateRange
         },
         visualMap: {
@@ -180,42 +175,39 @@ export default {
         },
         series: [{
           data: reports
-          //type: 'map'
+          // type: 'map'
         }]
       })
     },
     updateMap (date, drug, reload) {
-      //console.log("start to up")
+      // console.log("start to up")
       const obj = this
       this.date = date
       this.drug = drug
-      //console.log("current drug is ", this.drug)
-      if (drug != ""){
-        this.para = "&drug_name=" + this.drug
-        this.para_url = "&drug=" + this.drug
-      }
-      else{
-        this.para = ""
+      // console.log("current drug is ", this.drug)
+      if (drug != '') {
+        this.para = '&drug_name=' + this.drug
+        this.para_url = '&drug=' + this.drug
+      } else {
+        this.para = ''
       }
 
-      if (reload){
+      if (reload) {
         getMapRe(obj.para).then(function (datas) {
-          datas = datas["data"]
-          //console.log(datas)
+          datas = datas['data']
+          // console.log(datas)
           obj.rawData = datas
           obj.drawNewMap(datas, date)
         })
-      }
-      else {
-        //console.log("Update map without reloading")
+      } else {
+        // console.log("Update map without reloading")
         this.drawNewMap(this.rawData, date)
       }
-
     }
   },
   watch: {
     'updateMapDrug': function (val) {
-      //console.log(val)
+      // console.log(val)
       this.updateMap(this.date, val, true)
     }
   }

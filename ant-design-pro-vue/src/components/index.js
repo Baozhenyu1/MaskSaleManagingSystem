@@ -19,7 +19,6 @@ import LineChart from '@/components/Charts/LineChart'
 import SaleMap from '@/components/Charts/SaleMap'
 import SaleReservationMap from '@/components/Charts/SaleReservationMap'
 
-
 // pro components
 import AvatarList from '@/components/AvatarList'
 import CountDown from '@/components/CountDown'

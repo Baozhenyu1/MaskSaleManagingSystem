@@ -11,7 +11,7 @@
             </template>
             <template slot="description">
               <div>
-                <div v-if="item.title" class='description' :title="item.title">
+                <div v-if="item.title" class="description" :title="item.title">
                   {{ item.title }}
                 </div>
                 <div class="datetime">{{ item.description }}</div>
@@ -23,13 +23,13 @@
           </a-list-item-meta>
         </a-list-item>
       </a-list>
-      <div class='clear' @click="onClear">
+      <div class="clear" @click="onClear">
         {{ locale.clear }}
         {{ title }}
       </div>
     </div>
     <div v-else>
-      <div class='notFound'>
+      <div class="notFound">
         <img v-if="emptyImage" :src="emptyImage" alt="not found" />
         <div v-if="emptyText">{{ emptyText }}</div>
         <div v-else-if="locale.emptyText">{{ locale.emptyText }}</div>
@@ -40,38 +40,38 @@
 
 <script>
 
-    export default {
-        name: "NoticeList",
-      components: {},
-      props: {
-        locale: {
-          type: Object
-        },
-        onClear: {
-          type: Function
-        },
-        onClick: {
-          type: Function
-        },
-        data: {
-          type: Array
-        },
-        title: {
-          type: String
-        },
-        emptyImage: {
-          type: String
-        },
-        emptyText: {
-          type: String
-        }
-      },
-      data() {
-        return {};
-      },
-      methods: {
-      }
+export default {
+  name: 'NoticeList',
+  components: {},
+  props: {
+    locale: {
+      type: Object
+    },
+    onClear: {
+      type: Function
+    },
+    onClick: {
+      type: Function
+    },
+    data: {
+      type: Array
+    },
+    title: {
+      type: String
+    },
+    emptyImage: {
+      type: String
+    },
+    emptyText: {
+      type: String
     }
+  },
+  data () {
+    return {}
+  },
+  methods: {
+  }
+}
 </script>
 
 <style lang="less" scoped>

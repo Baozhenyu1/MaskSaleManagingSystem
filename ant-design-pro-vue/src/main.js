@@ -22,8 +22,8 @@ import './assets/iconfont/iconfont.css'
 import md5 from 'js-md5'
 
 import VCharts from 'v-charts'
-//import * as socketApi from './api/socket'
-//Vue.prototype.socketApi = socketApi
+// import * as socketApi from './api/socket'
+// Vue.prototype.socketApi = socketApi
 
 import * as socketNotice from './api/socket_notice'
 Vue.prototype.socketNotice = socketNotice

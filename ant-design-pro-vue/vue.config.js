@@ -8,13 +8,13 @@ function resolve (dir) {
 // vue.config.js
 module.exports = {
 
-    /*
+  /*
       Vue-cli3:
       Crashed when using Webpack `import()` #2463
       https://github.com/vuejs/vue-cli/issues/2463
 
      */
-    /*
+  /*
     pages: {
       index: {
         entry: 'src/main.js',
@@ -22,38 +22,38 @@ module.exports = {
       }
     },
     */
-    configureWebpack: {
-      plugins: [
-        // Ignore all locale files of moment.js
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-      ]
-    },
+  configureWebpack: {
+    plugins: [
+      // Ignore all locale files of moment.js
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    ]
+  },
 
-    chainWebpack: (config) => {
-      config.resolve.alias
-        .set('@$', resolve('src'))
-        .set('@api', resolve('src/api'))
-        .set('@assets', resolve('src/assets'))
-        .set('@comp', resolve('src/components'))
-        .set('@views', resolve('src/views'))
-        .set('@layout', resolve('src/layout'))
-        .set('@static', resolve('src/static'))
+  chainWebpack: (config) => {
+    config.resolve.alias
+      .set('@$', resolve('src'))
+      .set('@api', resolve('src/api'))
+      .set('@assets', resolve('src/assets'))
+      .set('@comp', resolve('src/components'))
+      .set('@views', resolve('src/views'))
+      .set('@layout', resolve('src/layout'))
+      .set('@static', resolve('src/static'))
 
-      const svgRule = config.module.rule('svg')
-      svgRule.uses.clear()
-      svgRule
-        .oneOf('inline')
-        .resourceQuery(/inline/)
-        .use('vue-svg-icon-loader')
-        .loader('vue-svg-icon-loader')
-        .end()
-        .end()
-        .oneOf('external')
-        .use('file-loader')
-        .loader('file-loader')
-        .options({
-          name: 'assets/[name].[hash:8].[ext]'
-        })
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear()
+    svgRule
+      .oneOf('inline')
+      .resourceQuery(/inline/)
+      .use('vue-svg-icon-loader')
+      .loader('vue-svg-icon-loader')
+      .end()
+      .end()
+      .oneOf('external')
+      .use('file-loader')
+      .loader('file-loader')
+      .options({
+        name: 'assets/[name].[hash:8].[ext]'
+      })
       /* svgRule.oneOf('inline')
         .resourceQuery(/inline/)
         .use('vue-svg-loader')
@@ -67,39 +67,39 @@ module.exports = {
           name: 'assets/[name].[hash:8].[ext]'
         })
       */
-    },
+  },
 
-    css: {
-      loaderOptions: {
-        less: {
-          modifyVars: {
-            /* less 变量覆盖，用于自定义 ant design 主题 */
+  css: {
+    loaderOptions: {
+      less: {
+        modifyVars: {
+          /* less 变量覆盖，用于自定义 ant design 主题 */
 
-            /*
+          /*
             'primary-color': '#F5222D',
             'link-color': '#F5222D',
             'border-radius-base': '4px',
             */
-          },
-          javascriptEnabled: true
+        },
+        javascriptEnabled: true
+      }
+    }
+  },
+
+  devServer: {
+    // development server port 8000
+    port: 8020,
+    proxy: {
+      'api/mask/': {
+        target: 'http://111.229.63.2',
+        changeOrigin: true,
+        timeout: 8 * 60 * 1000,
+        'pathRewrite': {
+          '^/api': ''
         }
       }
-    },
-
-    devServer: {
-      // development server port 8000
-      port: 8020,
-      proxy: {
-        'api/mask/': {
-          target:  'http://111.229.63.2',
-          changeOrigin: true,
-          "pathRewrite":{
-            "^/api": ""
-          }
-        }
-      }
-    },
-
+    }
+  },
 
   // disable source map in production
   productionSourceMap: false,

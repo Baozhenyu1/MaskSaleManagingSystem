@@ -7,9 +7,9 @@
 </template>
 
 <script>
-    export default {
-        name: "TestComponent"
-    }
+export default {
+  name: 'TestComponent'
+}
 </script>
 
 <style scoped>

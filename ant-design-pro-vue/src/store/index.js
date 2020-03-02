@@ -20,25 +20,25 @@ export default new Vuex.Store({
     count: 0
   },
   mutations: {
-    increase(state) {
+    increase (state) {
       state.count += 1
     },
-    decrease(state) {
+    decrease (state) {
       state.count -= 1
     },
-    set(state, n) {
+    set (state, n) {
       state.count = n
     }
   },
   actions: {
-    increaseCount(context) {
-      context.commit("increase")
+    increaseCount (context) {
+      context.commit('increase')
     },
-    decreaseCount(context) {
-      context.commit("decrease")
+    decreaseCount (context) {
+      context.commit('decrease')
     },
-    setCount(context, n) {
-      context.commit("set", n)
+    setCount (context, n) {
+      context.commit('set', n)
     }
   },
   getters

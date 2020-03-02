@@ -5,10 +5,10 @@ const api = {
   tableList: '/mask/api-backend/StoreTable/?format=json',
   analysisList: '/mask/api-backend/SellTable/?format=json',
 
-  //预约区域统计表
+  // 预约区域统计表
   streetDistrictList: '/mask/api-backend/reserveTable/',
 
-  //预约销售统计表
+  // 预约销售统计表
   sellReserveList: '/mask/api-backend/sellReserveTable/',
 
   // 修改基础信息
@@ -17,6 +17,8 @@ const api = {
   // 修改历史数据
   editStoreHistory: '/mask/api-backend/editStoreDaysData/',
 
+  // 居村配额
+  committeeQuota: '/mask/api-backend/comQuota/',
 
   deliveryList: '/mask/api-backend/deliveryTable/?format=json',
   quotaLIst: '/mask/api-backend/quotaTable/?format=json',
@@ -38,7 +40,7 @@ const api = {
   info: '/mask/api-backend/ManShortagedataList/?format=json',
   report: '/mask/api-backend/ManShortagedataReport/?format=json',
   reportItem: '/mask/api-backend/ManShortagedataReportTable/?format=json',
-  drugcount: '/mask/api-backend/DrugCount/?format=json',//'http://111.231.88.241:4567/drugcount',
+  drugcount: '/mask/api-backend/DrugCount/?format=json', // 'http://111.231.88.241:4567/drugcount',
   rank: '/mask/api-backend/DayRanking/?format=json',
   company: '/mask/api-backend/CompanyDrugCount/?format=json',
   subscribeList: '/mask/api-backend/Subscribe/?format=json',
@@ -59,7 +61,7 @@ const api = {
   drugdataList: '/mask/api-backend/DrugdataList/?format=json',
   drugbidList: '/mask/api-backend/DrugBidList/?format=json',
   drugInfo: '/mask/api-backend/DrugIndication/?',
-  wordCloud: '/mask/api-backend/wordcnt/',
+  wordCloud: '/mask/api-backend/wordcnt/'
 }
 
 export default api
@@ -91,7 +93,7 @@ export function getSaleData () {
   return axios({
     url: api.saleData,
     method: 'get',
-    params:{'map':1}
+    params: { 'map': 1 }
   })
 }
 export function getSaleReservationData () {
@@ -155,6 +157,14 @@ export function getStreetDistrictList (parameter) {
   })
 }
 
+export function getComQuotaList (parameter) {
+  return axios({
+    url: api.committeeQuota,
+    method: 'get',
+    params: parameter
+  })
+}
+
 export function getSellReserveList (parameter) {
   return axios({
     url: api.sellReserveList,
@@ -168,7 +178,7 @@ export function editStoreBasicInfo (data) {
     url: api.editStoreBasicInfo,
     method: 'post',
     data: JSON.stringify(data),
-    dataType:'json'
+    dataType: 'json'
   })
 }
 
@@ -177,7 +187,7 @@ export function editStoreDaysData (data) {
     url: api.editStoreHistory,
     method: 'post',
     data: JSON.stringify(data),
-    dataType:'json'
+    dataType: 'json'
   })
 }
 
@@ -194,8 +204,6 @@ export function getDrugInfo (parameter) {
     method: 'get'
   })
 }
-
-
 
 export function getDrugBidList (parameter) {
   return axios({
@@ -292,7 +300,7 @@ export function sendSubscribeUpdate (parameter) {
 
 export function sendSubscribeDelete (parameter) {
   return axios({
-    url: api.subscribeDelete + "&key=" + parameter,
+    url: api.subscribeDelete + '&key=' + parameter,
     method: 'get'
   })
 }
@@ -307,7 +315,7 @@ export function getUserList (parameter) {
 
 export function getCompanyDrugCount (parameter) {
   return axios({
-    url: api.company + "&threshold=" + parameter,
+    url: api.company + '&threshold=' + parameter,
     method: 'get'
   })
 }
