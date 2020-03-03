@@ -328,7 +328,7 @@ export default {
         obj.dataTotal = []
         obj.districtLoading = false
         const username = Vue.ls.get(USERNAME)
-        const district = username === 'shanghai' ? '上海市' : username
+        const district = username.indexOf('shanghai') !== -1? '上海市' : username.replace('m','').replace('s','')
         if ('data' in data) {
           data['data'].forEach(item => {
             if (item['district'] === district) {
@@ -364,7 +364,7 @@ export default {
         obj.districtLoading = false
         obj.dataTotal = []
         const username = Vue.ls.get(USERNAME)
-        const district = username === 'shanghai' ? '上海市' : username
+        const district = username.indexOf('shanghai') !== -1 ? '上海市' : username.replace('m','').replace('s','')
         if ('data' in data) {
           data['data'].forEach(item => {
             if (item['district'] === district) {
@@ -455,7 +455,7 @@ export default {
       getTableList(para).then(function (datas) {
         datas = datas['data']
         const username = Vue.ls.get(USERNAME)
-        const districtString = para.district === '' ? (obj.authority ? '全上海市' : username) : para.district
+        const districtString = para.district === '' ? (obj.authority ? '全上海市' : username.replace('m','').replace('s','')) : para.district
         const reportedString = parseInt(para.reported) === 1 ? '已填报' : '未填报'
         const tips = districtString + '_' + reportedString + (para.keyword === '' ? '' : ('_' + para.keyword)) + '_' + para.date
         table2excel(datas, tips, obj.switch)

@@ -1,104 +1,156 @@
 <template>
   <div class="account-settings-info-view">
     <a-row :gutter="16">
-      <a-col :md="24" :lg="16">
+      <a-col :md="24" :lg="10">
 
-        <a-form layout="vertical">
+        <a-form layout="vertical" @submit="handleSubmit" :form="form">
           <a-form-item
-            label="昵称"
+            label="用户名"
           >
-            <a-input placeholder="给自己起个名字" />
+            <a-input v-model="name" disabled > <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" /> </a-input>
           </a-form-item>
           <a-form-item
-            label="Bio"
+            label="旧密码"
+            :required="true"
           >
-            <a-textarea rows="4" placeholder="You are not alone."/>
-          </a-form-item>
-
-          <a-form-item
-            label="电子邮件"
-            :required="false"
-          >
-            <a-input placeholder="exp@admin.com"/>
-          </a-form-item>
-          <a-form-item
-            label="加密方式"
-            :required="false"
-          >
-            <a-select defaultValue="aes-256-cfb">
-              <a-select-option value="aes-256-cfb">aes-256-cfb</a-select-option>
-              <a-select-option value="aes-128-cfb">aes-128-cfb</a-select-option>
-              <a-select-option value="chacha20">chacha20</a-select-option>
-            </a-select>
+            <a-input
+              placeholder="输入旧密码作为身份验证"
+              type="password"
+              v-decorator="[
+              'oldPassword',
+              {rules: [{ required: true, message: '请输入旧密码' }]}]"
+            >      <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" /></a-input>
           </a-form-item>
           <a-form-item
-            label="连接密码"
-            :required="false"
+            label="新密码"
+            :required="true"
           >
-            <a-input placeholder="h3gSbecd"/>
+            <a-input
+              placeholder="输入新密码"
+              type="password"
+              v-decorator="[
+              'newPassword1',
+              {rules: [{ required: true, message: '请输入新密码' }]}]"
+            ><a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" /></a-input>
           </a-form-item>
           <a-form-item
-            label="登录密码"
-            :required="false"
+            label="确认密码"
+            :required="true"
           >
-            <a-input placeholder="密码"/>
+            <a-input
+              placeholder="再次输入密码"
+              type="password"
+              v-decorator="[
+              'newPassword2',
+              {rules: [{ required: true, message: '请输入确认密码' }]}]"
+            ><a-icon slot="prefix" type="safety" style="color:rgba(0,0,0,.25)" /></a-input>
           </a-form-item>
-
           <a-form-item>
-            <a-button type="primary">提交</a-button>
-            <a-button style="margin-left: 8px">保存</a-button>
+            <a-button htmlType="submit" type="primary">提交</a-button>
           </a-form-item>
         </a-form>
 
       </a-col>
+      <a-col :md="24" :lg="3">
+      </a-col>
       <a-col :md="24" :lg="8" :style="{ minHeight: '180px' }">
-        <div class="ant-upload-preview" @click="$refs.modal.edit(1)" >
-          <a-icon type="cloud-upload-o" class="upload-icon"/>
-          <div class="mask">
-            <a-icon type="plus" />
-          </div>
-          <img :src="option.img"/>
+        <div class="ant-upload-preview" >
+          <img :src="img"/>
         </div>
       </a-col>
 
     </a-row>
-
-    <avatar-modal ref="modal">
-
-    </avatar-modal>
   </div>
 </template>
 
 <script>
-import AvatarModal from './AvatarModal'
+import Vue from 'vue'
+import { USERNAME } from '@/store/mutation-types'
+import notification from 'ant-design-vue/es/notification'
+import { editPassword } from '@/api/manage'
+
 
 export default {
   components: {
-    AvatarModal
   },
   data () {
     return {
-      // cropper
-      preview: {},
-      option: {
-        img: '/avatar2.jpg',
-        info: true,
-        size: 1,
-        outputType: 'jpeg',
-        canScale: false,
-        autoCrop: true,
-        // 只有自动截图开启 宽度高度才生效
-        autoCropWidth: 180,
-        autoCropHeight: 180,
-        fixedBox: true,
-        // 开启宽度和高度比例
-        fixed: true,
-        fixedNumber: [1, 1]
-      }
+      name: '',
+      form: this.$form.createForm(this),
+      img: '/avatar2.jpg'
     }
   },
+  created () {
+    this.loadUsername();
+  },
   methods: {
+    loadUsername(){
+      this.name = Vue.ls.get(USERNAME);
+    },
+    handleSubmit (e) {
+      e.preventDefault()
+      let that = this;
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          // eslint-disable-next-line no-console
+          console.log('Received values of form: ', values)
+          if(values.newPassword1 !== values.newPassword2){
+            that.editError('输入的两次密码不一致');
+          } else if(values.newPassword1 .length < 6 || values.newPassword1.length > 10 || !/^[0-9a-zA-Z]*$/g.test(values.newPassword1)){
+            that.editError('新密码必须为数字或字母，长度6位到10位');
+          } else if(values.newPassword1 === values.oldPassword){
+            that.editError('新密码与旧密码重复');
+          } else {
+            that.submitValues(values);
+          }
 
+        }
+      })
+    },
+    submitValues(values){
+      const para = {'username':this.name, 'old_password':values.oldPassword, 'new_password':values.newPassword1};
+      console.log(para);
+      let that = this;
+      editPassword(para)
+        .then(function(data) {
+          if('status' in data){
+            if(parseInt(data['status']) === 1){
+              that.editSuccess('修改成功');
+            } else {
+              that.editSuccess('旧密码错误，身份核验失败');
+            }
+          } else {
+            that.editError('未知原因');
+          }
+        })
+        .catch(function() {
+          that.editError('网络错误');
+        })
+    },
+    info(message){
+      setTimeout(function () {
+        notification.error({
+          message: '提示',
+          description: message
+        })
+      }, 300)
+    },
+    editError(errMessage){
+      setTimeout(function () {
+        notification.error({
+          message: '提交失败',
+          description: errMessage
+        })
+      }, 300)
+    },
+    editSuccess(message){
+      setTimeout(function () {
+        notification.success({
+          message: '提交成功',
+          description: message
+        })
+      }, 300)
+    }
   }
 }
 </script>

@@ -219,7 +219,7 @@ export default {
       }, 500)
       const para = this.getPara({})
       const username = Vue.ls.get(USERNAME)
-      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : username)
+      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : username.replace('m','').replace('s',''))
       const company = this.queryParam.company ? this.queryParam.company : '所有公司'
       const str = district + '_' + company
       this.downloadText = '下载中'
@@ -252,7 +252,7 @@ export default {
     getPara (parameter) {
       const username = Vue.ls.get(USERNAME)
       const para = { ...parameter }
-      para.district = this.queryParam.district ? this.queryParam.district : (this.authority ? '' : username)
+      para.district = this.queryParam.district ? this.queryParam.district : (this.authority ? '' : username.replace('m','').replace('s',''))
       para.company = this.queryParam.company ? this.queryParam.company : ''
       if (para.district === '全上海市') {
         para.district = ''

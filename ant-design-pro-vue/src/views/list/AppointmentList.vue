@@ -124,9 +124,9 @@ export default {
       const total = { 'district': '合计', 'day_reserve': 0, 'total_reserve': 0, 'day_sell': 0, 'total_sell': 0, 'total_buy': 0 }
       const sumKeys = ['day_reserve', 'total_reserve', 'day_sell', 'total_sell', 'total_buy']
       const username = Vue.ls.get(USERNAME)
-      if (username !== 'shanghai') {
+      if (username.indexOf('shanghai') === -1) {
         data.forEach(item => {
-          if (item['district'] === username) {
+          if (item['district'] === username.replace('s','').replace('m','')) {
             today_reserve = parseInt(item['day_reserve'])
             total_reserve = parseInt(item['total_reserve'])
             total_buy = parseInt(item['total_buy'])

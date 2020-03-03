@@ -38,7 +38,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/list/TableList'),
         meta: { title: '药店填报信息表', keepAlive: false, permission: [ 'business_province', 'business_district' ], icon: 'table' }
       },
-
       {
         path: '/street-list/:pageNo([1-9]\\d*)?',
         name: 'StreetListWrapper',
@@ -81,25 +80,22 @@ export const asyncRouterMap = [
         hidden: true,
         component: RouteView,
         redirect: '/profile/basic',
-        meta: { title: '详情页', icon: 'profile', permission: [ 'business_province', 'business_district' ] },
+        meta: { title: '详情页', icon: 'profile', permission: ['business_province', 'business_district'] },
         children: [
           {
             path: '/profile/basic',
             name: 'ProfileBasic',
             component: () => import('@/views/profile/basic/basic'),
-            meta: { title: '药店填报信息详情页', permission: [ 'business_province', 'business_district' ] }
+            meta: { title: '药店填报信息详情页', permission: ['business_province', 'business_district'] }
           },
           {
             path: '/profile/streetInfo',
             name: 'ProfileStreetInfo',
             component: () => import('@/views/profile/basic/StreetInfo'),
-            meta: { title: '街道填报信息详情页', permission: [ 'business_province', 'business_district', 'affairs_district', 'affairs_province' ] }
-          },
-          {
-            path: '/profile/report',
-            name: 'weeklyReport',
-            component: () => import('@/views/profile/report/weeklyReport'),
-            meta: { title: '每周报表', permission: [ 'business_province', 'business_district' ] }
+            meta: {
+              title: '街道填报信息详情页',
+              permission: ['business_province', 'business_district', 'affairs_district', 'affairs_province']
+            }
           }
         ]
       }
@@ -127,14 +123,9 @@ export const constantRouterMap = [
         component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login')
       },
       {
-        path: 'register',
-        name: 'register',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
-      },
-      {
-        path: 'register-result',
-        name: 'registerResult',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
+        path: '/user/editPassword',
+        name: 'editPassword',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/EditPassword')
       }
     ]
   },

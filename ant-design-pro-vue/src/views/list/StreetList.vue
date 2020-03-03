@@ -199,7 +199,7 @@ export default {
           })
         }
         const username = Vue.ls.get(USERNAME)
-        const districtString = para.district === '' ? (obj.authority ? '全上海市' : username) : para.district
+        const districtString = para.district === '' ? (obj.authority ? '全上海市' : username.replace('m','').replace('s','')) : para.district
         const reportedString = para.reported === 1 ? '已填报' : '未填报'
         const tips = districtString + '_' + reportedString + (para.keyword === '' ? '' : ('_' + para.keyword))
         table2excel(downloadList, tips)
@@ -228,11 +228,11 @@ export default {
         obj.districtLoading = false
         // 上海市需要自己求和
         const username = Vue.ls.get(USERNAME)
-        if (username === 'shanghai' && 'data' in data) {
+        if (username.indexOf('shanghai') !== -1 && 'data' in data) {
           obj.dataTotal.push(obj.calTotal(data['data'], para['date']))
         } else if ('data' in data) {
           data['data'].forEach(item => {
-            if (item['district'] === username) {
+            if (item['district'] === username.replace('m','').replace('s','')) {
               item['report_proportion'] = (item['report_num'] / item['street_num'] * 100).toFixed(1) + '%'
               item['date'] = para['date']
               obj.dataTotal.push(item)
@@ -305,11 +305,11 @@ export default {
         obj.districtLoading = false
         const username = Vue.ls.get(USERNAME)
         // 上海市需要自己求和
-        if (username === 'shanghai' && 'data' in data) {
+        if (username.indexOf('shanghai') !== -1 && 'data' in data) {
           obj.dataTotal.push(obj.calTotal(data['data'], para['date']))
         } else if ('data' in data) {
           data['data'].forEach(item => {
-            if (item['district'] === username) {
+            if (item['district'] === username.replace('m','').replace('s','')) {
               item['date'] = para['date']
               item['report_proportion'] = (item['report_num'] / item['street_num'] * 100).toFixed(1) + '%'
               obj.dataTotal.push(item)

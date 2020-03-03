@@ -126,24 +126,24 @@
 
     </a-card>
 
-    <a-card
-      class="project-list"
-      style="margin-bottom: 24px; margin-top: 24px"
-      title="居委信息（收集中）"
-      :bordered="true">
+<!--    <a-card-->
+<!--      class="project-list"-->
+<!--      style="margin-bottom: 24px; margin-top: 24px"-->
+<!--      title="居委信息（收集中）"-->
+<!--      :bordered="true">-->
 
-      <a-table
-        size="small"
-        :scroll="{x: 1040, y: 3600}"
-        :columns="comColumns"
-        :dataSource="comData"
-        :pagination="pagination_com"
-        :loading="loading"
-        :bordered="bordered"
-      >
-      </a-table>
+<!--      <a-table-->
+<!--        size="small"-->
+<!--        :scroll="{x: 1040, y: 3600}"-->
+<!--        :columns="comColumns"-->
+<!--        :dataSource="comData"-->
+<!--        :pagination="pagination_com"-->
+<!--        :loading="loading"-->
+<!--        :bordered="bordered"-->
+<!--      >-->
+<!--      </a-table>-->
 
-    </a-card>
+<!--    </a-card>-->
 
   </page-view>
 </template>
@@ -209,31 +209,26 @@ export default {
     }
   },
   created () {
-    this.loadData()
-    this.loadCom()
-    this.loadHistory()
+    this.loadData();
   },
   methods: {
-    loadCom () {
-      const obj = this
-      getStoreDetail({ phar_id: obj.$route.query.id })
-        .then(function (data) {
-          const com = data['cor_committee']
-          if (com) {
-            com.forEach(item => {
-              obj.comData.push({
-                name: item['com_name'],
-                com_per: item['com_con_per'],
-                tel: item['com_con_tel'],
-                quota: '/',
-                quotaRate: parseFloat(item['com_quota_rate']).toFixed(3) + '%'
-              })
-            })
-          }
+    loadCom (data) {
+      const com = data['cor_committee']
+      if (com) {
+        com.forEach(item => {
+          this.comData.push({
+            name: item['com_name'],
+            com_per: item['com_con_per'],
+            tel: item['com_con_tel'],
+            quota: '/',
+            quotaRate: parseFloat(item['com_quota_rate']).toFixed(3) + '%'
+          })
         })
+      }
     },
     loadData () {
       const obj = this
+      this.loading = true
       getStoreDetail({ phar_id: obj.$route.query.id }).then(function (data) {
         obj.detail.pharmacyName = data['phar_name']
         obj.detail.id = data['phar_id']
@@ -243,48 +238,42 @@ export default {
         obj.detail.delivery = data['company']
         obj.detail.quota = data['phar_quota']
         obj.detail.district = data['district']
-        const com = data['cor_committee']
-        if (com) {
-          com.forEach(item => {
-            obj.comData.push({
-              name: item['com_name'],
-              com_per: item['com_con_per'],
-              tel: item['com_con_tel'],
-              quota: '/',
-              quotaRate: parseFloat(item['com_quota_rate']).toFixed(3) + '%'
-            })
-          })
-        }
+        obj.loadCom(data);
+        obj.handHistory(data);
       })
     },
     loadHistory () {
       this.loading = true
       const obj = this
-      obj.data = []
       getStoreDetail({ phar_id: obj.$route.query.id }).then(function (data) {
-        const days = data['days_data']
-        let index = 0
-        days.forEach(item => {
-          obj.data.push({
-            key: index,
-            date: moment(item['phar_date']).format('YYYY-MM-DD'),
-            report_time: item['phar_date'],
-            tag: item['tag'],
-            quota: data['quota'][index]['quota'],
-            purchased: item['purchased'],
-            sale: item['issued'],
-            loss: item['loss'],
-            balance: item['balance'],
-            reported: (parseInt(item['tag']) === 1 ? '是' : '否')
-          })
-          index++
-        })
-        obj.loading = false
-        obj.cacheData = obj.data.map(item => ({ ...item }))
-        if (obj.checkLogicError(false) <= 0) {
-          obj.historyOk = false
-        }
+        obj.handHistory(data);
       })
+    },
+    handHistory (data) {
+      const obj = this
+      obj.data = []
+      const days = data['days_data']
+      let index = 0
+      days.forEach(item => {
+        obj.data.push({
+          key: index,
+          date: moment(item['phar_date']).format('YYYY-MM-DD'),
+          report_time: item['phar_date'],
+          tag: item['tag'],
+          quota: data['quota'][index]['quota'],
+          purchased: item['purchased'],
+          sale: item['issued'],
+          loss: item['loss'],
+          balance: item['balance'],
+          reported: (parseInt(item['tag']) === 1 ? '是' : '否')
+        })
+        index++
+      })
+      obj.loading = false
+      obj.cacheData = obj.data.map(item => ({ ...item }))
+      if (obj.checkLogicError(false) <= 0) {
+        obj.historyOk = false
+      }
     },
     handleEdit () {
       if (!this.checkAuthority()) {
@@ -365,7 +354,7 @@ export default {
     },
     checkAuthority () {
       const username = Vue.ls.get(USERNAME)
-      return username === 'shanghai' || username === this.detail.district
+      return username.indexOf('shanghai') !== -1 || username.replace('m','').replace('s','') === this.detail.district
     },
     save () {
       if (!this.checkTime()) {

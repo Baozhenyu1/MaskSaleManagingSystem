@@ -20,6 +20,10 @@ const api = {
   // 居村配额
   committeeQuota: '/mask/api-backend/comQuota/',
 
+  // 修改密码
+  editPassword: '/mask/api-backend/api-edit_password/',
+
+
   deliveryList: '/mask/api-backend/deliveryTable/?format=json',
   quotaLIst: '/mask/api-backend/quotaTable/?format=json',
   lineChart: '/mask/api-backend/sellLineChart/?format=json',
@@ -40,7 +44,7 @@ const api = {
   info: '/mask/api-backend/ManShortagedataList/?format=json',
   report: '/mask/api-backend/ManShortagedataReport/?format=json',
   reportItem: '/mask/api-backend/ManShortagedataReportTable/?format=json',
-  drugcount: '/mask/api-backend/DrugCount/?format=json', // 'http://111.231.88.241:4567/drugcount',
+  drugcount: '/mask/api-backend/DrugCount/?format=json',
   rank: '/mask/api-backend/DayRanking/?format=json',
   company: '/mask/api-backend/CompanyDrugCount/?format=json',
   subscribeList: '/mask/api-backend/Subscribe/?format=json',
@@ -188,6 +192,27 @@ export function editStoreDaysData (data) {
     method: 'post',
     data: JSON.stringify(data),
     dataType: 'json'
+  })
+}
+
+export function editPassword (data) {
+  return axios({
+    url: api.editPassword,
+    method: 'post',
+    transformRequest: [
+      function (data) {
+        let ret = ''
+        for (let it in data) {
+          ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+        }
+        ret = ret.substring(0, ret.lastIndexOf('&'));
+        return ret
+      }
+    ],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: data
   })
 }
 

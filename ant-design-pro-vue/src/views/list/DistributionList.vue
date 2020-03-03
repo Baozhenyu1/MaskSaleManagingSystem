@@ -199,7 +199,7 @@ export default {
     },
     download () {
       const username = Vue.ls.get(USERNAME)
-      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : username)
+      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : username.replace('m','').replace('s',''))
       const company = this.queryParam.company ? this.queryParam.company : '所有公司'
       const keyword = this.queryParam.keyword ? this.queryParam.keyword : ''
       const date = (this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'))
