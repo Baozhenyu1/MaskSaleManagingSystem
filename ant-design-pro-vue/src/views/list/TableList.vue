@@ -112,7 +112,7 @@ import moment from 'moment'
 import { getTableList, getAnalysisList } from '@/api/manage'
 import { PageView } from '@/layouts'
 
-import { USERNAME } from '@/store/mutation-types'
+import { USER_DISTRICT } from '@/store/mutation-types'
 import Vue from 'vue'
 import json2excel from '@/utils/json2excel'
 
@@ -249,7 +249,7 @@ export default {
     }
   },
   created () {
-    this.authority = Vue.ls.get(USERNAME).indexOf('shanghai') !== -1
+    this.authority = Vue.ls.get(USER_DISTRICT) === '上海市';
     this.init()
     this.districtList = ['全上海市', '黄浦区', '徐汇区', '长宁区', '静安区', '普陀区', '虹口区', '杨浦区', '闵行区', '宝山区', '嘉定区', '浦东新区', '金山区', '松江区', '青浦区', '奉贤区', '崇明区']
   },
@@ -327,11 +327,9 @@ export default {
       getAnalysisList({ 'date': para['date'], district: '区' }).then(function (data) {
         obj.dataTotal = []
         obj.districtLoading = false
-        const username = Vue.ls.get(USERNAME)
-        const district = username.indexOf('shanghai') !== -1? '上海市' : username.replace('m','').replace('s','')
         if ('data' in data) {
           data['data'].forEach(item => {
-            if (item['district'] === district) {
+            if (item['district'] === Vue.ls.get(USER_DISTRICT)) {
               const report = parseInt(item['post_num'])
               const store = parseInt(item['store_num'])
               const proportion = store ? ((report / store * 100).toFixed(1) + '%') : '0.0%'
@@ -363,8 +361,7 @@ export default {
       getAnalysisList({ 'date': para['date'], district: '区' }).then(function (data) {
         obj.districtLoading = false
         obj.dataTotal = []
-        const username = Vue.ls.get(USERNAME)
-        const district = username.indexOf('shanghai') !== -1 ? '上海市' : username.replace('m','').replace('s','')
+        const district = Vue.ls.get(USER_DISTRICT)
         if ('data' in data) {
           data['data'].forEach(item => {
             if (item['district'] === district) {
@@ -454,8 +451,8 @@ export default {
 
       getTableList(para).then(function (datas) {
         datas = datas['data']
-        const username = Vue.ls.get(USERNAME)
-        const districtString = para.district === '' ? (obj.authority ? '全上海市' : username.replace('m','').replace('s','')) : para.district
+        const district = Vue.ls.get(USER_DISTRICT)
+        const districtString = para.district === '' ? (obj.authority ? '全上海市' : district) : para.district
         const reportedString = parseInt(para.reported) === 1 ? '已填报' : '未填报'
         const tips = districtString + '_' + reportedString + (para.keyword === '' ? '' : ('_' + para.keyword)) + '_' + para.date
         table2excel(datas, tips, obj.switch)

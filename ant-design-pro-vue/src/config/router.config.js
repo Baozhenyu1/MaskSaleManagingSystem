@@ -15,7 +15,7 @@ export const asyncRouterMap = [
         path: '/analysis',
         name: 'dashboard',
         component: () => import('@/views/dashboard/Analysis'),
-        meta: { title: '仪表盘', keepAlive: false, permission: [ 'business_province' ], icon: bxAnaalyse }
+        meta: { title: '仪表盘', keepAlive: false, permission: [ 'business_province','business_district'], icon: bxAnaalyse }
       },
       {
         path: '/committee-list',
@@ -80,7 +80,7 @@ export const asyncRouterMap = [
         hidden: true,
         component: RouteView,
         redirect: '/profile/basic',
-        meta: { title: '详情页', icon: 'profile', permission: ['business_province', 'business_district'] },
+        meta: { title: '详情页', icon: 'profile', permission: ['business_province', 'business_district', 'affairs_district','affairs_province', 'user'] },
         children: [
           {
             path: '/profile/basic',
@@ -94,7 +94,16 @@ export const asyncRouterMap = [
             component: () => import('@/views/profile/basic/StreetInfo'),
             meta: {
               title: '街道填报信息详情页',
-              permission: ['business_province', 'business_district', 'affairs_district', 'affairs_province']
+              permission: ['business_province', 'business_district', 'affairs_district', 'affairs_province','user']
+            }
+          },
+          {
+            path: '/profile/committee',
+            name: 'ProfileCommitteeInfo',
+            component: () => import('@/views/profile/basic/Committee'),
+            meta: {
+              title: '居委数据详情页',
+              permission: ['business_province', 'business_district', 'affairs_district', 'affairs_province','user']
             }
           }
         ]

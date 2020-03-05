@@ -12,6 +12,8 @@ export const DEFAULT_MULTI_TAB = 'DEFAULT_MULTI_TAB'
 export const USERNAME = 'DEFAULT_USER_NAME'
 export const USER_PERMISSION = 'DEFAULT_USER_PERMISSION'
 export const USER_GROUP = 'DEFAULT_USER_GROUP'
+export const USER_DISTRICT= 'USER_DISTRICT'
+export const TOKEN_TIME = 'DEFAULT_TOKEN_TIME'
 
 export const CONTENT_WIDTH_TYPE = {
   Fluid: 'Fluid',

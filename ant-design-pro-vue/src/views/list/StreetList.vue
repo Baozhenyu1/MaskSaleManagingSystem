@@ -103,7 +103,7 @@ import { getStreetList } from '@/api/manage'
 import moment from 'moment'
 import { getStreetDistrictList } from '../../api/manage'
 import Vue from 'vue'
-import { USERNAME } from '@/store/mutation-types'
+import { USER_DISTRICT } from '@/store/mutation-types'
 import json2excel from '@/utils/json2excel'
 
 function table2excel (jsonData, tips) {
@@ -159,7 +159,7 @@ export default {
     }
   },
   created () {
-    this.authority = (Vue.ls.get(USERNAME).indexOf('shanghai') !== -1)
+    this.authority = Vue.ls.get(USER_DISTRICT) === '上海市';
     this.init()
   },
   methods: {
@@ -198,8 +198,8 @@ export default {
             m_time: m_time
           })
         }
-        const username = Vue.ls.get(USERNAME)
-        const districtString = para.district === '' ? (obj.authority ? '全上海市' : username.replace('m','').replace('s','')) : para.district
+        const district = Vue.ls.get(USER_DISTRICT)
+        const districtString = para.district === '' ? (obj.authority ? '全上海市' : district) : para.district
         const reportedString = para.reported === 1 ? '已填报' : '未填报'
         const tips = districtString + '_' + reportedString + (para.keyword === '' ? '' : ('_' + para.keyword))
         table2excel(downloadList, tips)
@@ -227,12 +227,12 @@ export default {
         obj.dataTotal = []
         obj.districtLoading = false
         // 上海市需要自己求和
-        const username = Vue.ls.get(USERNAME)
-        if (username.indexOf('shanghai') !== -1 && 'data' in data) {
+        let district = Vue.ls.get(USER_DISTRICT);
+        if (district === '上海市' && 'data' in data) {
           obj.dataTotal.push(obj.calTotal(data['data'], para['date']))
         } else if ('data' in data) {
           data['data'].forEach(item => {
-            if (item['district'] === username.replace('m','').replace('s','')) {
+            if (item['district'] === district) {
               item['report_proportion'] = (item['report_num'] / item['street_num'] * 100).toFixed(1) + '%'
               item['date'] = para['date']
               obj.dataTotal.push(item)
@@ -303,13 +303,12 @@ export default {
       getStreetDistrictList({ date: para['date'] }).then(function (data) {
         obj.dataTotal = []
         obj.districtLoading = false
-        const username = Vue.ls.get(USERNAME)
-        // 上海市需要自己求和
-        if (username.indexOf('shanghai') !== -1 && 'data' in data) {
+        let district = Vue.ls.get(USER_DISTRICT);
+        if (district === '上海市' && 'data' in data) {
           obj.dataTotal.push(obj.calTotal(data['data'], para['date']))
         } else if ('data' in data) {
           data['data'].forEach(item => {
-            if (item['district'] === username.replace('m','').replace('s','')) {
+            if (item['district'] === district) {
               item['date'] = para['date']
               item['report_proportion'] = (item['report_num'] / item['street_num'] * 100).toFixed(1) + '%'
               obj.dataTotal.push(item)

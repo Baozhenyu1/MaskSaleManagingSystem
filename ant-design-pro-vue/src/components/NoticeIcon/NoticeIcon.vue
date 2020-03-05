@@ -170,7 +170,6 @@ export default {
         this.count -= len
         this.dataList[0].length -= len
 
-        console.log(this.dataList[0])
 
         for (let i = 0; i < len; i++) {
           deleteNoticeItem('&__pk=' + this.data[0].link)

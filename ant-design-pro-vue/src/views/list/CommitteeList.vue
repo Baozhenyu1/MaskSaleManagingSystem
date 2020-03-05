@@ -82,7 +82,7 @@
 import { getComQuotaList } from '@/api/manage'
 import { PageView } from '@/layouts'
 import Vue from 'vue'
-import { USERNAME } from '@/store/mutation-types'
+import { USER_DISTRICT } from '@/store/mutation-types'
 import json2excel from '@/utils/json2excel'
 
 function table2excel (jsonData, substr) {
@@ -91,8 +91,8 @@ function table2excel (jsonData, substr) {
   const keys = ['com_id', 'district', 'company', 'phar_id', 'phar_name', 'phar_addr', 'phar_quota', 'phar_balance', 'phar_date', 'street_name', 'com_name', 'quota', 'house_num']
   const title = '居村委明细表(' + substr + ')'
   jsonData.forEach(item => {
-    item['phar_date'] = item['last_report']['phar_date']
-    item['phar_balance'] = item['last_report']['balance']
+    item['phar_date'] = 'last_report' in item? item['last_report']['phar_date'] : '未填报';
+    item['phar_balance'] = 'last_report' in item? item['last_report']['balance'] : '未填报';
   })
   json2excel(jsonData, head, keys, title)
 }
@@ -136,7 +136,7 @@ export default {
     }
   },
   created () {
-    this.authority = Vue.ls.get(USERNAME).indexOf('shanghai') !== -1
+    this.authority = Vue.ls.get(USER_DISTRICT) === '上海市';
     this.loadColumns()
     this.init()
   },
@@ -148,8 +148,8 @@ export default {
     pushList (data) {
       this.data = []
       data.forEach(item => {
-        item['phar_date'] = item['last_report']['phar_date']
-        item['phar_balance'] = item['last_report']['balance']
+        item['phar_date'] = 'last_report' in item?item['last_report']['phar_date'] : '未填报';
+        item['phar_balance'] = 'last_report' in item?item['last_report']['balance'] : '未填报';
         this.data.push(item)
       })
     },
@@ -218,8 +218,8 @@ export default {
         }
       }, 500)
       const para = this.getPara({})
-      const username = Vue.ls.get(USERNAME)
-      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : username.replace('m','').replace('s',''))
+      const ud = Vue.ls.get(USER_DISTRICT)
+      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : ud)
       const company = this.queryParam.company ? this.queryParam.company : '所有公司'
       const str = district + '_' + company
       this.downloadText = '下载中'
@@ -234,8 +234,9 @@ export default {
     filterOption (input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
     },
-    requestFailed (err) {
-      if (err.response.status === 504) {
+    requestFailed (error) {
+      console.log(error)
+      if (error.response.status === 504) {
         this.$notification['error']({
           message: '下载超时',
           description: '下载的文件过大',
@@ -250,9 +251,9 @@ export default {
       }
     },
     getPara (parameter) {
-      const username = Vue.ls.get(USERNAME)
+      const ud = Vue.ls.get(USER_DISTRICT)
       const para = { ...parameter }
-      para.district = this.queryParam.district ? this.queryParam.district : (this.authority ? '' : username.replace('m','').replace('s',''))
+      para.district = this.queryParam.district ? this.queryParam.district : (this.authority ? '' : ud)
       para.company = this.queryParam.company ? this.queryParam.company : ''
       if (para.district === '全上海市') {
         para.district = ''

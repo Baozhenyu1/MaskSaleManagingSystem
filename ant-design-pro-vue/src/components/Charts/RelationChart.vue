@@ -27,7 +27,6 @@ export default {
       this.myChart.showLoading()
 
       getCompanyDrugCount(40).then(function (data) {
-        console.log(data)
 
         obj.myChart.hideLoading()
 

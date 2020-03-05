@@ -6,7 +6,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN, USER_PERMISSION } from '@/store/mutation-types'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -17,9 +17,13 @@ router.beforeEach((to, from, next) => {
   to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${to.meta.title}`))
   if (Vue.ls.get(ACCESS_TOKEN)) {
     /* has token */
-    if (to.path === '/user/login') {
-      next({ path: '/dashboard/workplace' })
+    if (to.path.indexOf('/user/login') !== -1) {
+      next();
       NProgress.done()
+    } else if(to.path.indexOf('/analysis') !== -1 && (Vue.ls.get(USER_PERMISSION) === 'affairs_province' || Vue.ls.get(USER_PERMISSION) === 'affairs_district')){
+      const permission = Vue.ls.get(USER_PERMISSION);
+      // 仪表盘就不要自动重定向了
+      next({ path: '/street-list' })
     } else {
       if (store.getters.roles.length === 0) {
         store
@@ -53,7 +57,8 @@ router.beforeEach((to, from, next) => {
         next()
       }
     }
-  } else {
+  }
+  else {
     if (whiteList.includes(to.name)) {
       // 在免登录白名单，直接进入
       next()

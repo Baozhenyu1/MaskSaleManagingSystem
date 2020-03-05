@@ -1,6 +1,7 @@
 const api = {
   Login: '/mask/api-backend/api-token-auth/',
   Logout: '/mask/api-backend/api-token-fresh/',
+  Refresh: '/mask/api-backend/api-token-fresh/',
   Register: '/mask/api-backend/api-registration/',
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',

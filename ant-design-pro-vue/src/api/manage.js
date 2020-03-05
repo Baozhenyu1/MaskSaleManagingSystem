@@ -23,6 +23,12 @@ const api = {
   // 修改密码
   editPassword: '/mask/api-backend/api-edit_password/',
 
+  //修改居委提交的某日预约数据
+  editCommData: '/mask/api-backend/',
+
+  //获得居委的详情数据
+  commDetail: '/mask/api-backend/',
+
 
   deliveryList: '/mask/api-backend/deliveryTable/?format=json',
   quotaLIst: '/mask/api-backend/quotaTable/?format=json',
@@ -189,6 +195,22 @@ export function editStoreBasicInfo (data) {
 export function editStoreDaysData (data) {
   return axios({
     url: api.editStoreHistory,
+    method: 'post',
+    data: JSON.stringify(data),
+    dataType: 'json'
+  })
+}
+
+export function getCommitteeDetail (parameter) {
+  return axios({
+    url: api.commDetail,
+    method: 'get',
+    params: parameter
+  })
+}
+export function editCommData (data) {
+  return axios({
+    url: api.editCommData,
     method: 'post',
     data: JSON.stringify(data),
     dataType: 'json'

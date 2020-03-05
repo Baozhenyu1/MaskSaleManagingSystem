@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import { login, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN, USER_DISTRICT } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
-import { USER_PERMISSION, USER_GROUP, USERNAME } from '../mutation-types'
+import { USER_PERMISSION, USER_GROUP, USERNAME, TOKEN_TIME } from '../mutation-types'
 
 const userInfo = {
   'id': '4291d7da9005377ec9aec4a71ea837f',
@@ -65,10 +65,11 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response
-          console.log(result);
-          Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          Vue.ls.set(USERNAME, userInfo['username'], 7 * 24 * 60 * 60 * 1000)
-          Vue.ls.set(USER_GROUP, result.group, 7 * 24 * 60 * 60 * 1000)
+          Vue.ls.set(TOKEN_TIME, result.exp, 2 * 24 * 60 * 60 * 1000)
+          Vue.ls.set(USERNAME, result.username, 2 * 24 * 60 * 60 * 1000)
+          Vue.ls.set(ACCESS_TOKEN, result.token, 2 * 24 * 60 * 60 * 1000)
+          Vue.ls.set(USER_GROUP, result.group, 2 * 24 * 60 * 60 * 1000)
+          Vue.ls.set(USER_DISTRICT, result.district, 2 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result.token)
           commit('SET_NAME', { name: userInfo['username'], welcome: welcome() })
           resolve()
@@ -82,16 +83,13 @@ const user = {
       // 这边获取用户信息用的是一个伪代码
 
       return new Promise((resolve, reject) => {
-        const username = Vue.ls.get(USER_GROUP)
+        const usergroup = Vue.ls.get(USER_GROUP)
 
         // 前端根据用户名生成权限列表，这里应该区分四类用户
         const account2permission = { '市商委': 'business_province', '市民政': 'affairs_province', '区商委': 'business_district', '区民政':'affairs_district'};
         let permissionKey = '';
-        if (username in account2permission){
-          permissionKey = account2permission[username];
-        } else {
-          console.warn('正常情况下不会到达这里，这里表示账户是非法账户');
-          permissionKey = 'business_province';
+        if (usergroup in account2permission){
+          permissionKey = account2permission[usergroup];
         }
         const user = {
           'permissionId': 'user',
@@ -100,7 +98,7 @@ const user = {
         userInfo.role.permissions = [ permissions[permissionKey], user ]
 
         // 顺便存储一下
-        Vue.ls.set(USER_PERMISSION, permissionKey, 7 * 24 * 60 * 60 * 1000)
+        Vue.ls.set(USER_PERMISSION, permissionKey, 2 * 24 * 60 * 60 * 1000)
 
         const result = userInfo
 
@@ -124,11 +122,12 @@ const user = {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         Vue.ls.remove(ACCESS_TOKEN)
-        logout(state.token).then(() => {
-          resolve()
-        }).catch(() => {
-          resolve()
-        })
+        resolve();
+        // logout(state.token).then(() => {
+        //   resolve()
+        // }).catch(() => {
+        //   resolve()
+        // })
       })
     }
 

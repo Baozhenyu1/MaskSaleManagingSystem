@@ -20,7 +20,6 @@ export default {
     init () {
       const obj = this
       getAlternative().then(function (data) {
-        console.log(data)
         for (let i = 0; i < data.length; i++) {
           obj.data.push({
             title: data[i].drug_name + '(' + data[i].department + ')',

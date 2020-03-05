@@ -99,7 +99,7 @@ export default {
         })
       })
     },
-    showHighlight (district, timeSlot = 900, times = 3) {
+    showHighlight (district, timeSlot = 500, times = 3) {
       const that = this
       const h = setInterval(function () {
         that.myChart.dispatchAction({

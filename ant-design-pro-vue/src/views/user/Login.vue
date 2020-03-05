@@ -79,6 +79,8 @@ import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
 import { get2step } from '@/api/login'
+import Vue from 'vue'
+import { USER_PERMISSION } from '@/store/mutation-types'
 
 export default {
   components: {
@@ -221,7 +223,14 @@ export default {
       })
     },
     loginSuccess (res) {
-      this.$router.push({ name: 'dashboard' })
+      const permission = Vue.ls.get(USER_PERMISSION);
+      if(permission === 'affairs_province' || permission === 'affairs_district'){
+        this.$router.push({ name: 'StreetListWrapper'})
+      } else if(permission === 'business_province'){
+        this.$router.push({ name: 'dashboard' })
+      } else {
+        this.$router.push({ name: 'CommitteeListWrapper' })
+      }
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         this.$notification.success({

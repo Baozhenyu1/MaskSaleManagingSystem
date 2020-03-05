@@ -155,7 +155,7 @@ import { getStoreDetail, editStoreBasicInfo, editStoreDaysData } from '@/api/man
 import DetailList from '@/components/tools/DetailList'
 import moment from 'moment'
 
-import { USERNAME } from '@/store/mutation-types'
+import { USER_DISTRICT } from '@/store/mutation-types'
 import Vue from 'vue'
 import notification from 'ant-design-vue/es/notification'
 
@@ -240,6 +240,8 @@ export default {
         obj.detail.district = data['district']
         obj.loadCom(data);
         obj.handHistory(data);
+      }).finally(()=>{
+        obj.loading = false;
       })
     },
     loadHistory () {
@@ -253,7 +255,10 @@ export default {
       const obj = this
       obj.data = []
       const days = data['days_data']
-      let index = 0
+      let index = 0;
+      if(!parseInt(days[0]['purchased']) && !parseInt(days[0]['issued']) && !parseInt(days[0]['loss']) ){
+        days[0]['purchased'] = days[0]['balance']; // 对于第一日只有库存的，强制配平
+      }
       days.forEach(item => {
         obj.data.push({
           key: index,
@@ -316,7 +321,7 @@ export default {
       let y_last = key === 0 ? 0 : parseInt(newData[key - 1]['balance'])
       if (target) {
         if ((/^\d+$/.test(value) || /^-\d+$/.test(value))) {
-          target[column] = parseInt(value) // 这里强制转化未整数
+          target[column] = parseInt(value) // 这里强制转化为整数
           for (let index = key; index < this.data.length; index++) {
             target = newData[index]
             if (parseInt(target['tag']) === 0 && index === this.data.length - 1) {
@@ -325,9 +330,8 @@ export default {
             target['balance'] = y_last + parseInt(target['purchased']) - parseInt(target['sale']) - parseInt(target['loss'])
             y_last = target['balance']
           }
-        } else if (value === '') {
-          target['balance'] = ''
-          target[column] = ''
+        } else if(value === ''){
+          target['balance'] = '';
         }
         this.data = newData
       }
@@ -353,8 +357,8 @@ export default {
       })
     },
     checkAuthority () {
-      const username = Vue.ls.get(USERNAME)
-      return username.indexOf('shanghai') !== -1 || username.replace('m','').replace('s','') === this.detail.district
+      let district = Vue.ls.get(USER_DISTRICT);
+      return district === '上海市' || district === this.detail.district
     },
     save () {
       if (!this.checkTime()) {
@@ -451,14 +455,13 @@ export default {
         })
         if (parseInt(data['status']) === 1) {
           that.modifySuccess()
-          that.loadHistory()
         } else if (parseInt(data['status']) === 0) {
           that.noModification()
-          that.loadHistory()
         } else {
           that.modifyDelay()
-          that.loadHistory()
         }
+      }).finally(()=>{
+        that.loadHistory()
       })
     },
     noModification () {

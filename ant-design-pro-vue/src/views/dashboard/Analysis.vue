@@ -33,7 +33,7 @@
             <a-icon type="info-circle-o"/>
           </a-tooltip>
           <div>
-            <mini-bar :show_data="saleNumList"/>
+            <mini-bar :barData="saleNumList"/>
           </div>
           <template slot="footer">历史累计销售量<span>&nbsp;{{ saleNumTotal }}</span></template>
         </chart-card>
@@ -94,7 +94,7 @@
             <a-icon type="info-circle-o"/>
           </a-tooltip>
           <div>
-            <mini-area :style="{ marginBottom: '-25px'}" :show_data="realTimeList"/>
+            <mini-area :style="{ marginBottom: '-25px'}" :areaData="realTimeList"/>
           </div>
           <template slot="footer">今日填报次数<span>&nbsp;{{ reportTimes }}</span></template>
         </chart-card>
@@ -136,7 +136,7 @@
       </a-col>
     </a-row>
 
-    <a-card title="实时全市统计表" style="margin-bottom: 12px">
+    <a-card title="实时全市统计表" style="margin-bottom: 12px" v-if="authority">
       <a-table
         size="small"
         class="test-table"
@@ -149,7 +149,7 @@
       </a-table>
     </a-card>
 
-    <a-card title="实时区域信息表">
+    <a-card title="实时区域信息表" v-if="authority">
 
       <template>
         <a-table
@@ -178,8 +178,7 @@
 <script>
 
 import moment from 'moment'
-import { USERNAME } from '@/store/mutation-types'
-import Vue from 'vue'
+
 
 import {
   ChartCard,
@@ -193,6 +192,8 @@ import {
 } from '@/components'
 import { mixinDevice } from '@/utils/mixin'
 import { getAnalysisList } from '@/api/manage'
+import Vue from 'vue'
+import { USER_DISTRICT } from '@/store/mutation-types'
 
 function sortByKey (array, key) {
   return array.sort(function (a, b) {
@@ -248,19 +249,21 @@ export default {
       loss: 0,
       dataTotal: [],
       dataTotalTmp: [],
-      highlight: ''
+      highlight: '',
+      authority: false,
     }
   },
   created () {
+    this.authority = Vue.ls.get(USER_DISTRICT) === '上海市';
     setTimeout(() => {
       this.loading = !this.loading
     }, 1000)
     this.initWebSocket()
     this.loadAnalysisList()
+
   },
   methods: {
     testHighlight () {
-      console.log('Start test')
       const districtList = ['黄浦区', '徐汇区', '长宁区', '静安区', '普陀区',
         '虹口区', '杨浦区', '闵行区', '宝山区', '嘉定区', '浦东新区', '金山区', '松江区', '青浦区', '奉贤区', '崇明区']
       let i = 0
@@ -303,12 +306,10 @@ export default {
     },
     updateAnalysisList () {
       this.dataTmp = []
-      // console.log("Analysis List updated")
       this.footer = '统计截至： ' + moment().format('YYYY-MM-DD HH:mm:ss')
 
       const obj = this
       getAnalysisList({ district: '区', date: moment().format('YYYY-MM-DD') }).then(function (data) {
-        // console.log("AnalysisList", data);
         data = data['data']
         for (let i = 0; i < 16; i++) {
           obj.dataTmp.push({
@@ -330,7 +331,6 @@ export default {
 
       this.dataTotalTmp = []
       getAnalysisList({ district: '上海市', date: moment().format('YYYY-MM-DD') }).then(function (data) {
-        // console.log("Total updated", data);
         data = data['data']
         obj.dataTotalTmp.push({
           key: 1,

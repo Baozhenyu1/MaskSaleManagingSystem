@@ -42,6 +42,16 @@ export function logout (params) {
   })
 }
 
+export function refresh (params) {
+  return axios({
+    url: api.Refresh,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    },
+    data: params
+  })
+}
 /**
  * get user 2step code open?
  * @param parameter {*}

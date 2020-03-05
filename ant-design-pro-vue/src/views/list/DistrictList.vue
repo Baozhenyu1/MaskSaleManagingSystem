@@ -66,8 +66,6 @@
 import { getAnalysisList } from '@/api/manage'
 import { PageView } from '@/layouts'
 import moment from 'moment'
-import { USERNAME } from '@/store/mutation-types'
-import Vue from 'vue'
 import json2excel from '@/utils/json2excel'
 
 function table2excel (jsonData, date) {

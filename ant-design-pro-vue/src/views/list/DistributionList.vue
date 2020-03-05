@@ -97,7 +97,7 @@
 import { getQuotaList } from '@/api/manage'
 import { PageView } from '@/layouts'
 import Vue from 'vue'
-import { USERNAME } from '@/store/mutation-types'
+import { USER_DISTRICT } from '@/store/mutation-types'
 import json2excel from '@/utils/json2excel'
 import moment from 'moment'
 function table2excel (jsonData, substr) {
@@ -145,7 +145,7 @@ export default {
     }
   },
   created () {
-    this.authority = Vue.ls.get(USERNAME).indexOf('shanghai') !== -1
+    this.authority = Vue.ls.get(USER_DISTRICT) === '上海市';
     this.loadColumns()
     this.init()
   },
@@ -198,8 +198,8 @@ export default {
       })
     },
     download () {
-      const username = Vue.ls.get(USERNAME)
-      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : username.replace('m','').replace('s',''))
+      const ud = Vue.ls.get(USER_DISTRICT)
+      const district = this.queryParam.district ? this.queryParam.district : (this.authority ? '全上海市' : ud)
       const company = this.queryParam.company ? this.queryParam.company : '所有公司'
       const keyword = this.queryParam.keyword ? this.queryParam.keyword : ''
       const date = (this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'))

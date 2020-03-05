@@ -55,19 +55,19 @@ import { PageView } from '@/layouts'
 // import {LineChart} from '@/components'
 import moment from 'moment'
 import { getSellReserveList } from '@/api/manage'
-import { USERNAME } from '@/store/mutation-types'
+import { USER_DISTRICT } from '@/store/mutation-types'
 import Vue from 'vue'
 import json2excel from '@/utils/json2excel'
 
-function table2excel (jsonData, date, authority) {
+function table2excel (jsonData, date, district) {
   // 要导出的json数据
   const head = ['区', '当日预约户数', '累计预约户数', '累计预约户数占比', '当日销售个数', '累计销售个数', '实际购买到口罩户数', '销售数/预约数']
   const keys = ['district', 'day_reserve', 'total_reserve', 'reserve_proportion', 'day_sell', 'total_sell', 'total_buy', 'sell_reserve']
-  let title = authority.replace('s','').replace('m','') + '口罩预约销售统计表(' + date + ')'
+  let title = district + '口罩预约销售统计表(' + date + ')'
   const data = []
-  if (authority.indexOf('shanghai') === -1) {
+  if (district !== '上海市') {
     jsonData.forEach(item => {
-      if (item['district'] === authority.replace('s','').replace('m','')) {
+      if (item['district'] === district) {
         item['district'] = String(item['district']).substr(0, 2)
         data.push(item)
       }
@@ -123,10 +123,10 @@ export default {
       let total_buy
       const total = { 'district': '合计', 'day_reserve': 0, 'total_reserve': 0, 'day_sell': 0, 'total_sell': 0, 'total_buy': 0 }
       const sumKeys = ['day_reserve', 'total_reserve', 'day_sell', 'total_sell', 'total_buy']
-      const username = Vue.ls.get(USERNAME)
-      if (username.indexOf('shanghai') === -1) {
+      const district = Vue.ls.get(USER_DISTRICT)
+      if (district !== '上海市') {
         data.forEach(item => {
-          if (item['district'] === username.replace('s','').replace('m','')) {
+          if (item['district'] === district) {
             today_reserve = parseInt(item['day_reserve'])
             total_reserve = parseInt(item['total_reserve'])
             total_buy = parseInt(item['total_buy'])
@@ -167,7 +167,7 @@ export default {
     },
     download () {
       table2excel(this.data, this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
-        Vue.ls.get(USERNAME))
+        Vue.ls.get(USER_DISTRICT))
     },
     handleSearch () {
       const date = this.queryParam.date ? moment(new Date(this.queryParam.date._d)).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')

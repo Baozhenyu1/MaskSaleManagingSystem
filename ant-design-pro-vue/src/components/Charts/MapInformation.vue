@@ -44,8 +44,6 @@ export default {
       getMapGeo().then(function (datas) {
         const usaJson = datas
 
-        console.log('mapGeo:', usaJson)
-
         obj.myChart.hideLoading()
         echarts.registerMap('Shanghai', usaJson, {})
         obj.option = {

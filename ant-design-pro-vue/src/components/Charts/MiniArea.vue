@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     draw () {
-      this.rate = this.show_data
+      this.rate = this.areaData
       this.myChart = echarts.init(document.getElementById('main'))
 
       // 指定图表的配置项和数据
@@ -45,7 +45,7 @@ export default {
           show: false
         },
         series: [{
-          data: this.show_data,
+          data: this.areaData,
           type: 'line',
           smooth: true,
           itemStyle: { normal: { areaStyle: { type: 'default' } } }
@@ -65,8 +65,6 @@ export default {
     },
     test () {
       this.intnum = setInterval(_ => {
-        // this.testData.splice(0, 1)
-        // this.testData.push(Math.floor(Math.random() * 100) + 200)
         this.timeStamp.splice(0, 1)
         this.timeStamp.push(this.timeStamp[this.timeStamp.length - 1] + 1)
         this.myChart.setOption({
@@ -74,21 +72,18 @@ export default {
             data: this.timeStamp
           },
           series: [{
-            data: this.show_data
+            data: this.areaData
           }]
         })
         // this.sendData()
       }, 1000)
-    },
-    sendData () {
-      // this.$emit('sendData',this.show_data[9]);
     }
   },
   props: {
-    showData: Array
+    areaData: Array
   },
   watch: {
-    show_data: {
+    areaData: {
       deep: true,
       handler (val, oldVal) {
         this.timeStamp.splice(0, 1)
@@ -98,7 +93,7 @@ export default {
             data: this.timeStamp
           },
           series: [{
-            data: this.show_data
+            data: this.areaData
           }]
         })
       }

@@ -165,7 +165,7 @@ export default {
           scopedSlots: { customRender: 'updatedAt' }
         },
         {
-          table: '操作',
+          title: '操作',
           dataIndex: 'action',
           width: '120px',
           scopedSlots: { customRender: 'action' }

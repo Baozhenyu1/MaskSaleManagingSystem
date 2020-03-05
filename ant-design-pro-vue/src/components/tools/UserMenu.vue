@@ -12,14 +12,7 @@
           <span>{{ nickname() }}</span>
         </span>
         <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-          <a-menu-item key="0">
-            <router-link :to="{ name: 'center' }">
-              <a-icon type="user"/>
-              <span>个人中心</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-divider/>
-          <a-menu-item key="2">
+          <a-menu-item key="1">
             <a href="javascript:;" @click="handleLogout">
               <a-icon type="logout"/>
               <span>退出登录</span>
