@@ -24,10 +24,10 @@ const api = {
   editPassword: '/mask/api-backend/api-edit_password/',
 
   //修改居委提交的某日预约数据
-  editCommData: '/mask/api-backend/',
+  editCommData: '/mask/api-backend/editComDaysData/',
 
   //获得居委的详情数据
-  commDetail: '/mask/api-backend/',
+  commDetail: '/mask/api-backend/comDetail/',
 
 
   deliveryList: '/mask/api-backend/deliveryTable/?format=json',
@@ -211,9 +211,21 @@ export function getCommitteeDetail (parameter) {
 export function editCommData (data) {
   return axios({
     url: api.editCommData,
+    transformRequest: [
+      function (data) {
+        let ret = ''
+        for (let it in data) {
+          ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+        }
+        ret = ret.substring(0, ret.lastIndexOf('&'));
+        return ret
+      }
+    ],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
     method: 'post',
-    data: JSON.stringify(data),
-    dataType: 'json'
+    data: data
   })
 }
 

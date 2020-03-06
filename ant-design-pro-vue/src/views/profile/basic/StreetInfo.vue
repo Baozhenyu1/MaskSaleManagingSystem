@@ -218,8 +218,12 @@ export default {
       let that = this;
       editCommData(para)
         .then(res=>{
-          row.editable = false;
-          that.cacheData[parseInt(row.key)] = row;
+          if('status' in res && res['status'] >= 0){
+            row.editable = false;
+            that.cacheData[parseInt(row.key)] = row;
+          } else {
+            that.showError('提交失败，网络故障');
+          }
         })
         .catch(res=>{
           that.showError('提交失败，网络故障');
