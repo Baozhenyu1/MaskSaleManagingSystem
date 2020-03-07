@@ -153,17 +153,21 @@ export default {
         record['today'] = value;
         record['total'] = last_total;
       }
+      this.calculateTotal();
     },
     loadReportData(para){
       const that = this;
       that.data = [];
       that.loading = true;
+
       getStreetDetail(para)
         .then(function (data) {
           that.name = data['street_name'];
           that.id = data['street_id'];
           data = data['committees']
           let index = 0;
+          that.todayTotal = 0;
+          that.total = 0;
           for (const i in data) {
             that.data.push({
               key:index,
@@ -187,6 +191,19 @@ export default {
         that.loading = false;
       })
     },
+    calculateTotal(){
+      this.total = 0;
+      this.todayTotal = '未填报';
+      this.data.forEach(item=>{
+        if(item['today'] !== '未填报' && item['today'] !== ''){
+          if(this.todayTotal === '未填报'){
+            this.todayTotal = 0;
+          }
+          this.todayTotal += parseInt(item['today']);
+        }
+        this.total += parseInt(item['total'])
+      })
+    },
     init () {
       this.handleSearch();
     },
@@ -204,6 +221,7 @@ export default {
           return item;
         }
       });
+
     },
     save (row) {
       if(row.total !== '' && row.today !== ''){
@@ -246,6 +264,7 @@ export default {
           return item;
         }
       });
+      this.calculateTotal();
     },
   }
 }

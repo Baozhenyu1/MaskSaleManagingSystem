@@ -165,6 +165,9 @@
         })
       },
       edit (row) {
+        if(row.reported === '否'){
+          row.reserve = '';
+        }
         row.editable = true;
       },
       save (row) {
@@ -207,6 +210,7 @@
             return item;
           }
         });
+        this.calculateTotal();
       },
     }
   }
