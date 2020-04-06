@@ -92,7 +92,7 @@ import moment from 'moment'
 import json2excel from '@/utils/json2excel'
 const DetailListItem = DetailList.Item
 import notification from 'ant-design-vue/es/notification'
-
+const editTime = { 'start': '10:00', 'end': '17:00' }
 function table2excel (jsonData, substr) {
   // 要导出的json数据
   const head = ['街道编号', '街道名', '居委会编号', '居委会名称', '联系人', '联系电话', '今日预约登记户数', '累计预约登记户数', '填报时间' ]
@@ -141,6 +141,24 @@ export default {
     this.init()
   },
   methods: {
+    checkTime () {
+      const d = new Date()
+      let h = d.getHours()
+      h = h < 10 ? ('0' + h) : h
+      let min = d.getMinutes()
+      min = min < 10 ? ('0' + min) : min
+      const time = h + ':' + min
+      return editTime['start'] <= time && time <= editTime['end']
+    },
+    notOpenModification () {
+      const message = '不在时间' + editTime['start'] + '-' + editTime['end'] + '内，无法修改。'
+      setTimeout(function () {
+        notification.error({
+          message: '错误',
+          description: message
+        })
+      }, 300)
+    },
     download () {
       table2excel(this.data, this.name)
     },
@@ -213,6 +231,10 @@ export default {
       this.loadReportData(para);
     },
     edit (row) {
+      if (!this.checkTime()) {
+        this.notOpenModification()
+        return
+      }
       this.data = this.data.map(item => {
         if (item.id === row.id) {
           item.today = item.today ==='未填报'?'':item.today;

@@ -1,8 +1,8 @@
 <template>
   <page-view title="" logo="">
-    <!--    <a-card title="上海市累计预约销售情况" :bordered="true">-->
-    <!--      <line-chart/>-->
-    <!--    </a-card>-->
+        <a-card title="上海市累计预约销售情况" :bordered="true"  v-if="false">
+          <line-chart/>
+        </a-card>
     <a-card title="预约销售统计表" :bordered="true" style="margin-top: 15px">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -52,7 +52,7 @@
 
 <script>
 import { PageView } from '@/layouts'
-// import {LineChart} from '@/components'
+import { LineChart } from '@/components'
 import moment from 'moment'
 import { getSellReserveList } from '@/api/manage'
 import { USER_DISTRICT } from '@/store/mutation-types'
@@ -85,7 +85,8 @@ function table2excel (jsonData, date, district) {
 export default {
   name: 'AppointmentList',
   components: {
-    PageView
+    PageView,
+    LineChart
   },
   data () {
     return {

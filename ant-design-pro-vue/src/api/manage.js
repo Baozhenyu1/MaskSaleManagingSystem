@@ -29,6 +29,8 @@ const api = {
   //获得居委的详情数据
   commDetail: '/mask/api-backend/comDetail/',
 
+  //获得每日的累计销售预约情况
+  sellReservation: '/mask/api-backend/sellReserveLinechart/',
 
   deliveryList: '/mask/api-backend/deliveryTable/?format=json',
   quotaLIst: '/mask/api-backend/quotaTable/?format=json',
@@ -206,6 +208,13 @@ export function getCommitteeDetail (parameter) {
     url: api.commDetail,
     method: 'get',
     params: parameter
+  })
+}
+
+export function getSellReservation () {
+  return axios({
+    url: api.sellReservation,
+    method: 'get'
   })
 }
 export function editCommData (data) {

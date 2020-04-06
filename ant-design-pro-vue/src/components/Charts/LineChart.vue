@@ -1,9 +1,12 @@
 <template>
-  <div force-fit="true" id="main" style="width: 100%; height: 360px;"></div>
+  <div>
+    <div  id="main" style="height: 600px;width: 60%"></div>
+  </div>
 </template>
 
 <script>
 import echarts from 'echarts'
+import { getSellReservation } from '@/api/manage'
 
 export default {
   name: 'LineChart',
@@ -11,14 +14,14 @@ export default {
     return {
       rate: [],
       myChart: {},
-      appointmentTotal: [1087.7, 1530.7, 1785.2, 1976.8, 2100.5, 2193.3, 2325.3, 2450.7, 2622.0],
-      axisX: ['2月2日', '2月3日', '2月4日', '2月5日', '2月6日', '2月7日', '2月8日', '2月9日', '2月10日'],
-      saleTotal: [undefined, 166.4, 336.4, 511.9, 686.2, 862.1, 1035.8, 1190.3, 1343.1],
+      appointmentTotal: [],
+      axisX: [],
+      saleTotal: [],
       option: {}
     }
   },
   mounted () {
-    this.draw()
+    this.loadData();
   },
   methods: {
     draw () {
@@ -26,16 +29,17 @@ export default {
       // 指定图表的配置项和数据
       const obj = this
       this.option = {
+        backgroundColor: '#FBFBFB',
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['累计预约量', '累计销售量']
+          data: ['累计预约量', '累计销售量'],
+          top:20
         },
         grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
+          left: 50,
+          right: 50,
           containLabel: true
         },
         toolbox: {
@@ -45,41 +49,70 @@ export default {
         },
         xAxis: {
           type: 'category',
-          boundaryGap: false,
-          data: obj.axisX
+          data: obj.axisX,
+          axisTick: {
+            alignWithLabel: true
+          },
+          boundaryGap:true,
+          axisLine: {
+            onZero: false,
+          },
         },
         yAxis: {
+          name: '户数(万户)',
+          nameLocation: 'middle',
+          nameGap:40,
           type: 'value'
         },
         series: [
           {
             name: '累计预约量',
             type: 'line',
-            data: obj.appointmentTotal
+            symbolSize:10,
+            color:['#3FA7DC'],
+            symbol: 'circle',
+            smooth: true,
+            data: obj.appointmentTotal,
+            itemStyle : { normal: {label : {show: true}}}
           },
           {
             name: '累计销售量',
             type: 'line',
-            data: obj.saleTotal
+            symbolSize:10,
+            color:['orange'],
+            symbol: 'circle',
+            smooth: true,
+            data: obj.saleTotal,
+            itemStyle : { normal: {label : {show: true}}}
           }
         ]
       }
       // 使用刚指定的配置项和数据显示图表。
       this.myChart.setOption(this.option)
     },
-    test () {
-      this.intnum = setInterval(_ => {
-        this.timeStamp.splice(0, 1)
-        this.timeStamp.push(this.timeStamp[this.timeStamp.length - 1] + 1)
-        this.myChart.setOption({
-          xAxis: {
-            data: this.timeStamp
-          },
-          series: [{
-            data: this.show_data
-          }]
-        })
-      }, 1000)
+    dateFormat(date){
+     const splits = date.split('-');
+     const month = parseInt(splits[0]);
+     const day = parseInt(splits[1]);
+     return month + '月' + day + '日'
+    },
+    loadData(){
+      let that = this;
+      getSellReservation().then(data=>{
+        console.log(data)
+        that.appointmentTotal = [];
+        that.axisX = [];
+        that.saleTotal = [];
+        for(let index in data){
+          if(index === '03-03'){
+            continue;
+          }
+          that.axisX.push(that.dateFormat(index))
+          that.appointmentTotal.push((data[index]['reserve'] / 10000).toFixed(1))
+          that.saleTotal.push((data[index]['sell'] / 10000).toFixed(1))
+        }
+        that.draw();
+      })
     }
   }
 }

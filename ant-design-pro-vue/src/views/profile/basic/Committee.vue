@@ -57,6 +57,7 @@
 
   import DetailList from '@/components/tools/DetailList'
   import notification from 'ant-design-vue/es/notification'
+  const editTime = { 'start': '10:00', 'end': '17:00' }
 
   const DetailListItem = DetailList.Item
   export default {
@@ -104,6 +105,24 @@
       this.loadData();
     },
     methods: {
+      checkTime () {
+        const d = new Date()
+        let h = d.getHours()
+        h = h < 10 ? ('0' + h) : h
+        let min = d.getMinutes()
+        min = min < 10 ? ('0' + min) : min
+        const time = h + ':' + min
+        return editTime['start'] <= time && time <= editTime['end']
+      },
+      notOpenModification () {
+        const message = '不在时间' + editTime['start'] + '-' + editTime['end'] + '内，无法修改。'
+        setTimeout(function () {
+          notification.error({
+            message: '错误',
+            description: message
+          })
+        }, 300)
+      },
       loadData () {
         let that = this;
         this.loading = true;
@@ -165,6 +184,10 @@
         })
       },
       edit (row) {
+        if (!this.checkTime()) {
+          this.notOpenModification()
+          return
+        }
         if(row.reported === '否'){
           row.reserve = '';
         }
